@@ -10,6 +10,9 @@ namespace Hack.Data
         {
             builder.ToTable(nameof(Project)).HasKey(e => e.Id);
             builder.Property(e => e.Name);
+            builder.HasIndex(e => e.Name);
+            builder.Property(e => e.JiraId);
+            builder.HasMany(e => e.WorkItems).WithOne(e => e.Project).HasForeignKey(e => e.ProjectId);
         }
     }
 }
