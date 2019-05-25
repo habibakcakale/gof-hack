@@ -85,6 +85,7 @@ namespace Hack.Web
             });
 
             app.UseHttpsRedirection();
+            app.UseCors();
             app.UseAuthentication();
             app.UseMvc();
             app.UseMvcWithDefaultRoute();
