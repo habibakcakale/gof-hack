@@ -32,7 +32,7 @@
     name: 'Header',
     props: [],
     data: () => ({
-      drawer: null
+      drawer: false
     }),
     computed: {
 
