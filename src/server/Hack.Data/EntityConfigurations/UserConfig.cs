@@ -8,14 +8,12 @@ namespace Hack.Data
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable(nameof(User));
+            builder.ToTable("Users");
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Username).IsRequired();
             builder.HasIndex(e => e.Username);
-            builder.Property(e => e.Email).IsRequired();
-            builder.HasIndex(e => e.Email);
             builder.Property(e => e.PasswordHashed).IsRequired();
-            builder.HasMany(p => p.Projects).WithOne(e => e.User).HasForeignKey(e => e.UserId);
+            builder.OwnsOne(e => e.Credentials);
         }
     }
 }

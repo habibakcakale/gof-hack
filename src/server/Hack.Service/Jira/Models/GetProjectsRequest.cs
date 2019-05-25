@@ -1,9 +1,6 @@
-﻿using Hack.Domain;
-
-namespace Hack.Service
+﻿namespace Hack.Service
 {
     public sealed class GetProjectsRequest
     {
-        public JiraCredentials Credentials { get; set; }
     }
 }

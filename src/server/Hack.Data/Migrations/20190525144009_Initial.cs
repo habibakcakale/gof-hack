@@ -76,18 +76,19 @@ namespace Hack.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Username = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    PasswordHashed = table.Column<string>(nullable: false)
+                    PasswordHashed = table.Column<string>(nullable: false),
+                    Credentials_Username = table.Column<string>(nullable: true),
+                    Credentials_Token = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,9 +200,9 @@ namespace Hack.Data.Migrations
                 {
                     table.PrimaryKey("PK_Project", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Project_User_UserId",
+                        name: "FK_Project_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "User",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -261,13 +262,8 @@ namespace Hack.Data.Migrations
                 column: "SectionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Email",
-                table: "User",
-                column: "Email");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_Username",
-                table: "User",
+                name: "IX_Users_Username",
+                table: "Users",
                 column: "Username");
         }
 
@@ -307,7 +303,7 @@ namespace Hack.Data.Migrations
                 name: "Section");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Users");
         }
     }
 }

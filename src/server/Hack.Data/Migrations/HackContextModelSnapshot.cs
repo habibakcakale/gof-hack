@@ -177,9 +177,6 @@ namespace Hack.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Email")
-                        .IsRequired();
-
                     b.Property<string>("PasswordHashed")
                         .IsRequired();
 
@@ -188,11 +185,9 @@ namespace Hack.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email");
-
                     b.HasIndex("Username");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Hack.Domain.EpicRequirement", b =>
@@ -224,7 +219,7 @@ namespace Hack.Data.Migrations
             modelBuilder.Entity("Hack.Domain.Project", b =>
                 {
                     b.HasOne("Hack.Domain.User", "User")
-                        .WithMany("Projects")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -266,6 +261,29 @@ namespace Hack.Data.Migrations
                         .WithMany("SectionEpics")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Hack.Domain.User", b =>
+                {
+                    b.OwnsOne("Hack.Domain.JiraCredentials", "Credentials", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("Token");
+
+                            b1.Property<string>("Username");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.HasOne("Hack.Domain.User")
+                                .WithOne("Credentials")
+                                .HasForeignKey("Hack.Domain.JiraCredentials", "UserId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 #pragma warning restore 612, 618
         }

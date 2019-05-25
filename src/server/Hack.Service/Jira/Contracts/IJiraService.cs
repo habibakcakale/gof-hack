@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Hack.Domain;
+using System.Threading.Tasks;
 
 namespace Hack.Service
 {
     public interface IJiraService
     {
-        Task<GetProjectsResponse> GetProjects(GetProjectsRequest request);
+        Task<GetProjectsResponse> GetProjects(GetProjectsRequest request, User user);
     }
 }

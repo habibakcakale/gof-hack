@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Hack.Data;
+﻿using Hack.Data;
 using Hack.Domain;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Nensure;
@@ -11,41 +10,36 @@ namespace Hack.Service
     public sealed class UserService : IUserService
     {
         private readonly IUserRepo _repo;
-        private readonly AuthenticationConfig _authConfig;
 
-        private readonly LoginResponse _loginFailedResponse = new LoginResponse
+        public UserService(IUserRepo repo)
         {
-            User = null,
-            FailureMessage = "Username or password is invalid."
-        };
-
-        public UserService(IUserRepo repo, AuthenticationConfig authConfig)
-        {
-            Ensure.NotNull(repo, authConfig);
+            Ensure.NotNull(repo);
             _repo = repo;
-            _authConfig = authConfig;
         }
 
-        public LoginResponse Login(LoginRequest request)
+        public User Get(int id)
+        {
+            return _repo.Find(id);
+        }
+
+        public User Get(string username)
+        {
+            return _repo.Get(username);
+        }
+
+        public bool IsLoginValid(LoginRequest request)
         {
             Ensure.NotNull(request);
-            request.ValidateAndThrow(request);
 
             var user = _repo.Get(request.Username);
             Ensure.NotNull(user);
             var hash = HashSaltPassword(request.Password, request.Username);
-            return hash == user.PasswordHashed
-                ? new LoginResponse
-                {
-                    User = user
-                }
-                : _loginFailedResponse;
+            return hash == user.PasswordHashed;
         }
 
         public RegisterResponse Register(RegisterRequest request)
         {
             Ensure.NotNull(request);
-            request.ValidateAndThrow(request);
 
             var hashed = HashSaltPassword(request.Password, request.Username);
             var user = _repo.Get(request.Username);
@@ -56,14 +50,21 @@ namespace Hack.Service
             user = _repo.Create(new User
             {
                 Username = request.Username,
-                Email = request.Email,
-                PasswordHashed = hashed
+                PasswordHashed = hashed,
+                Credentials = new JiraCredentials()
             });
             _repo.Save();
-            return new RegisterResponse
-            {
-                User = user
-            };
+            return new RegisterResponse();
+        }
+
+        public SetJiraCredentialsResponse SetJiraCredentials(SetJiraCredentialsRequest request, int userId)
+        {
+            Ensure.NotNull(request);
+            var user = _repo.Find(userId);
+            user.Credentials = new JiraCredentials { Username = request.Credentials.Username, Token = request.Credentials.Token };
+            _repo.Update(user);
+            _repo.Save();
+            return new SetJiraCredentialsResponse();
         }
 
         private string HashSaltPassword(string password, string saltSource)

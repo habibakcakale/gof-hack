@@ -1,10 +1,6 @@
-﻿using Hack.Domain;
-
-namespace Hack.Service
+﻿namespace Hack.Service
 {
-    public sealed class RegisterResponse
+    public sealed class RegisterResponse : SuccessResponse
     {
-        public User User { get; set; }
-        public string FailureMessage { get; set; }
     }
 }

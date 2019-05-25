@@ -39,7 +39,12 @@ namespace Hack.Service
         private ClaimsIdentity CreateClaimsIdentity(User user)
         {
             Ensure.NotNull(user);
-            var claims = new List<Claim>();
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Username)
+            };
             return new ClaimsIdentity(claims);
         }
     }

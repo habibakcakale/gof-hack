@@ -39,17 +39,18 @@ namespace Hack.Service.Search
 
         private SearchResult GetRequirements(SearchRequest request)
         {
-                $"select TOP 15 R.* from dbo.Requirement R INNER JOIN FREETEXTTABLE(dbo.Requirement, (Title, Description), '{request.Query}') FT ON FT.[Key] = R.Id ORDER BY FT.[Rank]");
-            var a =  new SearchResult()
-            {
-                SearchItems = result.Select(item => new SearchItem
-                {
-                    Title = item.Title,
-                    Id = item.Id,
-                    Type = SearchType.Requirement
-                }).ToList()
-            };
-            return a;
+            return null;
+            //     $"select TOP 15 R.* from dbo.Requirement R INNER JOIN FREETEXTTABLE(dbo.Requirement, (Title, Description), '{request.Query}') FT ON FT.[Key] = R.Id ORDER BY FT.[Rank]");
+            // var a =  new SearchResult()
+            // {
+            //     SearchItems = result.Select(item => new SearchItem
+            //     {
+            //         Title = item.Title,
+            //         Id = item.Id,
+            //         Type = SearchType.Requirement
+            //     }).ToList()
+            // };
+            // return a;
         }
     }
 
