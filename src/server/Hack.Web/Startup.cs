@@ -25,6 +25,7 @@ namespace Hack.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(c =>
             {
@@ -78,6 +79,7 @@ namespace Hack.Web
             });
 
             app.UseHttpsRedirection();
+            app.UseCors();
             app.UseAuthentication();
             app.UseMvc();
             app.UseMvcWithDefaultRoute();
