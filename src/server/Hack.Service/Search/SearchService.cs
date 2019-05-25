@@ -13,8 +13,8 @@ namespace Hack.Service.Search
 {
     public class SearchService : ISearchService
     {
-        private readonly IEntityRepo<Requirement> _requirementRepo;
-        public SearchService(IEntityRepo<Requirement> requirementRepo)
+        private readonly IEntityRepo<WorkItem> _requirementRepo;
+        public SearchService(IEntityRepo<WorkItem> requirementRepo)
         {
             _requirementRepo = requirementRepo;
         }

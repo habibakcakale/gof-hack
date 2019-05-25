@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nensure;
-using System.Security.Claims;
 
 namespace Hack.Web.Controllers
 {
@@ -46,12 +45,11 @@ namespace Hack.Web.Controllers
             return _userService.Register(request);
         }
 
-        [HttpPost("jiraCredential")]
+        [HttpPost("jiraCredentials")]
         public SetJiraCredentialsResponse JiraCredentials(SetJiraCredentialsRequest request)
         {
             Ensure.NotNull(request);
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return _userService.SetJiraCredentials(request, userId);
+            return _userService.SetJiraCredentials(request, GetUserId());
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using Nensure;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Hack.Web
 {
@@ -25,6 +26,11 @@ namespace Hack.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(configure =>
+            {
+                var builder = new CorsPolicyBuilder().AllowAnyOrigin().AllowAnyMethod().AllowCredentials().AllowAnyHeader();
+                configure.AddDefaultPolicy(builder.Build());
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(c =>
             {
@@ -63,6 +69,7 @@ namespace Hack.Web
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

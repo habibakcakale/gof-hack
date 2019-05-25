@@ -6,5 +6,7 @@ namespace Hack.Service
     public interface IJiraService
     {
         Task<GetProjectsResponse> GetProjects(GetProjectsRequest request, User user);
+
+        Task<GetTasksResponse> GetTasks(GetTasksRequest request, User user);
     }
 }

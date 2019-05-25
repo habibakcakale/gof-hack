@@ -1,5 +1,7 @@
 <script>
 import TheChartCard from "@/components/TheChartCard";
+import service from "@/utils/service";
+import { mapActions } from "vuex";
 export default {
   components: {
     TheChartCard
@@ -95,7 +97,13 @@ export default {
       });
     }
   },
+  mounted() {
+    service.get("test").then(res => {
+      console.log(res);
+    });
+  },
   methods: {
+    ...mapActions("auth", ["SET_TOKEN"]),
     handleProjectCreate() {
       this.$router.push(`project-summary`);
     },
@@ -283,7 +291,7 @@ export default {
         dark
         fab
         class="mb-5"
-        bottom="100px"
+        bottom
         right
         color="blue"
         @click="isOpenCreateProjectModal = true"
