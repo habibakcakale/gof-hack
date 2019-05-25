@@ -8,7 +8,7 @@ namespace Hack.Service
         public LoginRequestValidator()
         {
             var cred = HackConfig.Instance.Auth.Credentials;
-            RuleFor(o => o.Username).EmailAddress().NotEmpty();
+            RuleFor(o => o.Username).EmailAddress();
             RuleFor(o => o.Password).MinimumLength(cred.PasswordMinLength).MaximumLength(cred.PasswordMaxLength);
         }
     }

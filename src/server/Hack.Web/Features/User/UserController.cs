@@ -23,18 +23,18 @@ namespace Hack.Web.Controllers
         }
 
         [AllowAnonymous, HttpPost("login")]
-        public LoginResponse Login(LoginRequest login)
+        public ObjectResult Login(LoginRequest login)
         {
             Ensure.NotNull(login);
             if (_userService.IsLoginValid(login))
             {
                 var user = _userService.Get(login.Username);
                 var token = _jwtService.GenerateToken(user);
-                return new LoginResponse { Token = token };
+                return Ok(new LoginResponse { Token = token });
             }
             else
             {
-                return _loginFailedResponse;
+                return BadRequest(_loginFailedResponse);
             }
         }
 

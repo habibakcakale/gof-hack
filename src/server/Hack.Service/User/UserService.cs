@@ -30,9 +30,8 @@ namespace Hack.Service
         public bool IsLoginValid(LoginRequest request)
         {
             Ensure.NotNull(request);
-
             var user = _repo.Get(request.Username);
-            Ensure.NotNull(user);
+            if (user is null) { return false; }
             var hash = HashSaltPassword(request.Password, request.Username);
             return hash == user.PasswordHashed;
         }
