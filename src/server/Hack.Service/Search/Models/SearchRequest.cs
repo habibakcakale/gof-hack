@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hack.Service.Search.Models
+﻿namespace Hack.Service
 {
     public class SearchRequest
     {

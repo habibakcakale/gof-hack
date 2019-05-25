@@ -1,12 +1,12 @@
-﻿using Hack.Service.Search;
+﻿using Hack.Service;
+using Hack.Service.Search;
 using Hack.Service.Search.Models;
+using Hack.Web.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using Nensure;
 
-namespace Hack.Web.Features.Search
+namespace Hack.Web
 {
-    using Hack.Web.Controllers;
-    using Microsoft.AspNetCore.Mvc;
-    using Nensure;
-
     public class SearchController : HackController
     {
         private readonly ISearchService _searchService;
