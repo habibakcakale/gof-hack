@@ -21,8 +21,8 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    alert("Need");
+  if (!to.meta.isPublic) {
+    alert("Need Authentication");
     return next();
   }
   return next();

@@ -1,5 +1,6 @@
 <script>
 import TheChartCard from "@/components/TheChartCard";
+import service from "@/utils/service";
 export default {
   components: {
     TheChartCard
@@ -94,6 +95,11 @@ export default {
         return v;
       });
     }
+  },
+  mounted() {
+    service.get("test").then(res => {
+      console.log(res);
+    });
   },
   methods: {
     handleProjectCreate() {
@@ -283,7 +289,7 @@ export default {
         dark
         fab
         class="mb-5"
-        bottom="100px"
+        bottom
         right
         color="blue"
         @click="isOpenCreateProjectModal = true"
