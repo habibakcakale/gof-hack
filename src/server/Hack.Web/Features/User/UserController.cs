@@ -23,7 +23,7 @@ namespace Hack.Web.Controllers
         }
 
         [AllowAnonymous, HttpPost("login")]
-        public ObjectResult Login(LoginRequest login)
+        public IObjectResponse<LoginResponse> Login(LoginRequest login)
         {
             Ensure.NotNull(login);
             if (_userService.IsLoginValid(login))
@@ -39,10 +39,11 @@ namespace Hack.Web.Controllers
         }
 
         [AllowAnonymous, HttpPost("register")]
-        public RegisterResponse Register(RegisterRequest request)
+        public IObjectResponse<RegisterResponse> Register(RegisterRequest request)
         {
             Ensure.NotNull(request);
-            return _userService.Register(request);
+            var result = _userService.Register(request);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("jiraCredentials")]

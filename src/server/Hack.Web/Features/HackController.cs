@@ -12,5 +12,9 @@ namespace Hack.Web.Controllers
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
+
+        protected IObjectResponse<T> Ok<T>(T value) => new OkObjectResponse<T>(value);
+
+        protected IObjectResponse<T> BadRequest<T>(T value) => new BadRequestObjectResponse<T>(value);
     }
 }
