@@ -2,7 +2,6 @@
 using Hack.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Nensure;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Hack.Web
@@ -23,9 +22,16 @@ namespace Hack.Web
         public async Task<GetProjectsResponse> GetProjects(GetProjectsRequest request)
         {
             Ensure.NotNull(request);
-            var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var user = _userService.Get(id);
+            var user = _userService.Get(GetUserId());
             return await _jiraService.GetProjects(request, user);
+        }
+
+        [HttpPost("tasks")]
+        public async Task<GetTasksResponse> GetTasks(GetTasksRequest request)
+        {
+            Ensure.NotNull(request);
+            var user = _userService.Get(GetUserId());
+            return await _jiraService.GetTasks(request, user);
         }
     }
 }

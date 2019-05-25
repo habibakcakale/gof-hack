@@ -15,7 +15,7 @@ namespace Hack.Service
 
         public async Task<GetProjectsResponse> GetProjects(GetProjectsRequest request, User user)
         {
-            Ensure.NotNull(request);
+            Ensure.NotNull(request, user);
             Ensure.NotNull(user.Credentials);
 
             const string endpoint = "rest/api/3/project/search";
@@ -33,6 +33,29 @@ namespace Hack.Service
                     };
                 }
                 return JsonConvert.DeserializeObject<GetProjectsResponse>(await response.Content.ReadAsStringAsync());
+            }
+        }
+
+        public async Task<GetTasksResponse> GetTasks(GetTasksRequest request, User user)
+        {
+            Ensure.NotNull(request, user);
+            Ensure.NotNull(user.Credentials);
+
+            var endpoint = $"/rest/api/2/search?jql=project={request.ProjectId}&maxResults=1000&fields=";
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = BaseAddress;
+                var headerValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{user.Credentials.Username}:{user.Credentials.Token}"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", headerValue);
+                var response = await client.GetAsync(endpoint);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new GetTasksResponse
+                    {
+                        FailureMessage = $"Request ended with a status code of {response.StatusCode}|"
+                    };
+                }
+                return JsonConvert.DeserializeObject<GetTasksResponse>(await response.Content.ReadAsStringAsync());
             }
         }
     }
