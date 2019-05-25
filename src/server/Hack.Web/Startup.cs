@@ -28,7 +28,7 @@ namespace Hack.Web
         {
             services.AddCors(configure =>
             {
-                var builder = new CorsPolicyBuilder().AllowAnyOrigin().AllowAnyMethod().AllowCredentials();
+                var builder = new CorsPolicyBuilder().AllowAnyOrigin().AllowAnyMethod().AllowCredentials().AllowAnyHeader();
                 configure.AddDefaultPolicy(builder.Build());
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -85,7 +85,6 @@ namespace Hack.Web
             });
 
             app.UseHttpsRedirection();
-            app.UseCors();
             app.UseAuthentication();
             app.UseMvc();
             app.UseMvcWithDefaultRoute();
