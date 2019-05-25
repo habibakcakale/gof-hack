@@ -1,5 +1,6 @@
 <script>
 import service from "@/utils/service";
+import { mapActions } from "vuex";
 export default {
   name: "Register",
   layout: "public",
@@ -9,13 +10,26 @@ export default {
     };
   },
   methods: {
+    ...mapActions("auth", ["SET_TOKEN"]),
     handleRegister() {
       // todo validation
 
-      service.post("user/register", this.registerForm).then(res => {
+      service.post("user/register", this.registerForm).then(({ isSuccess }) => {
         // once back-end completed, we can check here.
         // todo redirect dashboard after login
-        console.log(res);
+        if (isSuccess) {
+          service
+            .post("user/login", {
+              username: this.registerForm.username,
+              password: this.registerForm.password
+            })
+            .then(({ isSuccess, token }) => {
+              if (isSuccess) {
+                this.SET_TOKEN(token);
+                this.$router.push("dashboard");
+              }
+            });
+        }
       });
     }
   }
@@ -39,13 +53,7 @@ export default {
                 <v-text-field
                   v-model="registerForm.username"
                   name="name"
-                  label="Name"
-                  type="text"
-                ></v-text-field>
-                <v-text-field
-                  v-model="registerForm.email"
-                  name="email"
-                  label="E-Mail"
+                  label="Email"
                   type="text"
                 ></v-text-field>
                 <v-text-field
