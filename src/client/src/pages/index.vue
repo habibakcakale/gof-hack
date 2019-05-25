@@ -1,6 +1,7 @@
 <script>
 import TheChartCard from "@/components/TheChartCard";
 import service from "@/utils/service";
+import { mapActions } from "vuex";
 export default {
   components: {
     TheChartCard
@@ -102,6 +103,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions("auth", ["SET_TOKEN"]),
     handleProjectCreate() {
       this.$router.push(`project-summary`);
     },

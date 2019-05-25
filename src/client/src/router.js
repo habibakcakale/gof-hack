@@ -22,7 +22,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (!to.meta.isPublic) {
-    alert("Need Authentication");
+    Vue.toasted.show("Auth required!");
     return next();
   }
   return next();

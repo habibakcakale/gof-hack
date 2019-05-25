@@ -1,6 +1,6 @@
 import axios from "axios";
 import Vue from "vue";
-/* import store from "@/store"; */
+import store from "@/store";
 
 const service = axios.create({
   baseURL: "http://gof-hack.azurewebsites.net/api",
@@ -11,9 +11,9 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // sending token in every request in need
-    /*  if (store.auth.token) {
-      config.headers["Authorization"] = "Bearer " + store.auth.token;
-    } */
+    if (store.getters.token) {
+      config.headers["Authorization"] = "Bearer " + store.getters.token;
+    }
     return config;
   },
   error => {
@@ -27,7 +27,7 @@ service.interceptors.response.use(
   ({ data }) => {
     const { code, isSuccess, failureMessage } = data;
 
-    if (!isSuccess) {
+    if (isSuccess == false) {
       Vue.toasted.global.network_error({
         message: failureMessage
       });
@@ -42,6 +42,8 @@ service.interceptors.response.use(
     if (code === 500) {
       alert("NetWork Error");
     }
+
+    return data;
   },
   error => {
     Vue.toasted.global.network_error({
