@@ -1,8 +1,10 @@
-﻿using Hack.Data;
+﻿using FluentValidation.AspNetCore;
+using Hack.Data;
 using Hack.Domain;
 using Hack.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Nensure;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace Hack.Web
 {
@@ -31,7 +32,15 @@ namespace Hack.Web
                 var builder = new CorsPolicyBuilder().AllowAnyOrigin().AllowAnyMethod().AllowCredentials().AllowAnyHeader();
                 configure.AddDefaultPolicy(builder.Build());
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add<ValidateModelStateAttribute>();
+            })
+            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetTasksRequestValidator>())
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddTransient<ExceptionHandlingMiddleware>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Hack.Web", Version = "v1" });
@@ -85,6 +94,7 @@ namespace Hack.Web
             });
 
             app.UseHttpsRedirection();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthentication();
             app.UseMvc();
             app.UseMvcWithDefaultRoute();
