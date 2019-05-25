@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 
 namespace Hack.Service
 {
-    public sealed class GetProjectsResponse
+    public sealed class GetProjectsResponse : SuccessResponse
     {
-        public HttpStatusCode StatusCode { get; set; }
         public IEnumerable<Project> Values { get; set; }
 
         public sealed class Project

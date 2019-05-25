@@ -46,7 +46,7 @@ namespace Hack.Web.Controllers
             return _userService.Register(request);
         }
 
-        [HttpPost("jiraCredential")]
+        [HttpPost("jiraCredentials")]
         public SetJiraCredentialsResponse JiraCredentials(SetJiraCredentialsRequest request)
         {
             Ensure.NotNull(request);

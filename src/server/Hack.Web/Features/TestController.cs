@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nensure;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace Hack.Web.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [AllowAnonymous, HttpGet]
         public string Test(string param)
         {
             _logger.LogInformation(JsonConvert.SerializeObject(HttpContext.Request.QueryString));
