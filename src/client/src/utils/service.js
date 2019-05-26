@@ -5,7 +5,7 @@ import router from "@/router";
 import { removeToken } from "@/utils/token";
 
 const service = axios.create({
-  baseURL: "http://gof-hack.azurewebsites.net/api",
+  baseURL: "https://gof-hack.azurewebsites.net/api",
   timeout: 5000
 });
 
