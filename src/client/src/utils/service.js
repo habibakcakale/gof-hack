@@ -28,6 +28,24 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   res => res.data,
   error => {
+    var response = error.response;
+    var message = "";
+    if (response && response.data && response.data) {
+      var data = response.data;
+      if (data && data.errors) {
+        message = Object.keys(response.data.errors)
+          .map(item => response.data.errors[item])
+          .join("<br/>");
+      } else if (data.failureMessage) {
+        message = data.failureMessage;
+      } else {
+        message = error.message;
+      }
+    } else message = error.message;
+    Vue.toasted.global.network_error({
+      message: message
+    });
+
     if (error.response.status == 401) {
       removeToken();
       router.push("/login");
