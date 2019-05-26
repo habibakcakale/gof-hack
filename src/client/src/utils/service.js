@@ -26,7 +26,7 @@ service.interceptors.request.use(
 );
 
 service.interceptors.response.use(
-  res => res,
+  res => res.data,
   error => {
     Vue.toasted.global.network_error({
       message: error.message
