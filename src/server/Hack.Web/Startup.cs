@@ -135,6 +135,7 @@ namespace Hack.Web
             services.AddScoped<IContextFactory, HackContextFactory>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<IProjectRepo, ProjectRepo>();
+            services.AddScoped<IWorkItemRepo, WorkItemRepo>();
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -145,6 +146,7 @@ namespace Hack.Web
             services.AddScoped<IJiraService, JiraService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IWorkItemService, WorkItemService>();
         }
     }
 }
