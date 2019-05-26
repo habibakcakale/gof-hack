@@ -82,13 +82,15 @@ router.beforeEach((to, from, next) => {
     });
   }
 
-  if (to.meta.alreadyLogged) {
-    return next({
-      path: "/dashboard",
-      query: {
-        redirect: to.fullPath
-      }
-    });
+  if (hasToken) {
+    if (to.meta.alreadyLogged) {
+      return next({
+        path: "/dashboard",
+        query: {
+          redirect: to.fullPath
+        }
+      });
+    }
   }
 
   next();

@@ -16,7 +16,7 @@ const actions = {
     setToken(token);
   },
   REMOVE_TOKEN: ({ commit }) => {
-    commit("SET_TOKEN", "token");
+    commit("SET_TOKEN", null);
     removeToken("");
   }
 };
