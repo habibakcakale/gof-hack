@@ -175,7 +175,7 @@ import service from "@/utils/service";
               {{ props.item.fields.priority.name }}
             </td>
             <td class="text-xs-center">
-              {{ props.item.fields.timeOriginalEstimate }}
+              {{ props.item.fields.timeOriginalEstimate | timeInHours }}
             </td>
             <td class="text-xs-center">
               <v-text-field

@@ -2,7 +2,7 @@
   <header>
     <v-toolbar color="indigo" dark fixed app>
       <v-spacer></v-spacer>
-      <v-toolbar-title>MEGA by GanG Of Four</v-toolbar-title>
+      <v-toolbar-title>MEGA</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn flat @click="handleLogout">

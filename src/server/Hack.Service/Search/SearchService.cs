@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Hack.Data;
 using Hack.Domain;
@@ -40,11 +41,18 @@ namespace Hack.Service.Search
 
             var estimated = new MlContextService(_contentDirectory.Path).CreatePredictionEngine(request.Method)
                 .Predict(modelInput);
-
+            var textSearch = string.Concat(modelInput.Title, " ", modelInput.Description);
+            if (string.IsNullOrWhiteSpace(textSearch))
+            {
+                return new SearchResult
+                {
+                    Estimate = estimated.Estimate,
+                    SearchItems = new List<WorkItem>()
+                };
+            }
             using (var context = _factory.Create())
             {
-                var workItems = context.Set<WorkItem>().FromSql("EXEC SearchWorkItem {0}",
-                     string.Concat(modelInput.Title, " ", modelInput.Description));
+                var workItems = context.Set<WorkItem>().FromSql("EXEC SearchWorkItem {0}", textSearch);
 
                 return new SearchResult
                 {

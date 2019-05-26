@@ -14,7 +14,9 @@ namespace Hack.Service
         {
             public string JiraId { get; set; }
             public string Name { get; set; }
+            public string Key { get; set; }
             public ProjectState State { get; set; }
+            public int ProjectId { get; set; }
         }
     }
 }

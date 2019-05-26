@@ -4,8 +4,10 @@ using Hack.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Nensure;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NLog.Filters;
 using static Hack.Service.GetProjectStasusResponse;
 
 namespace Hack.Web
@@ -28,7 +30,7 @@ namespace Hack.Web
             Ensure.NotNull(request);
             var response = new GetProjectStasusResponse();
             var jiraProjectsResult = await _jiraService.GetProjects(new GetProjectsRequest());
-            var dbProjects = _projectService.GetAll();
+            var dbProjects = _projectService.GetAll().ToList();
             if (jiraProjectsResult.IsSuccess)
             {
                 response.NewProjects = jiraProjectsResult.Values.Where(p => dbProjects.All(dp => dp.JiraId != p.Id))
@@ -36,20 +38,30 @@ namespace Hack.Web
                     {
                         JiraId = p.Id,
                         Name = p.Name,
-                        State = ProjectState.Initial
+                        State = ProjectState.Initial,
+                        Key = p.Key
                     }).ToArray();
             }
-            var converter = new Func<Project, ProjectDto>(p => new ProjectDto
-            {
-                JiraId = p.JiraId,
-                Name = p.Name,
-                State = p.State
-            });
 
-            response.EstimateProjects = dbProjects.Where(p => p.State == ProjectState.Estimation).Select(converter);
-            response.TimeSpentProjects = dbProjects.Where(p => p.State == ProjectState.TimeSpent).Select(converter);
-            response.CompletedProjects = dbProjects.Where(p => p.State == ProjectState.Complete).Select(converter);
+            response.EstimateProjects = FilterProjects(dbProjects, jiraProjectsResult.Values, ProjectState.Estimation);
+            response.TimeSpentProjects = FilterProjects(dbProjects, jiraProjectsResult.Values, ProjectState.TimeSpent);
+            response.CompletedProjects = FilterProjects(dbProjects, jiraProjectsResult.Values, ProjectState.Complete);
             return response;
+        }
+
+        private IEnumerable<ProjectDto> FilterProjects(IEnumerable<Project> dbProjects, IEnumerable<GetProjectsResponse.ProjectData> values, ProjectState state)
+        {
+            return from dbProject in dbProjects
+                   join value in values on dbProject.JiraId equals value.Id
+                   where dbProject.State == state
+                   select new ProjectDto
+                   {
+                       JiraId = dbProject.JiraId,
+                       Name = dbProject.Name,
+                       State = dbProject.State,
+                       Key = value.Key,
+                       ProjectId = dbProject.Id
+                   };
         }
     }
 }
