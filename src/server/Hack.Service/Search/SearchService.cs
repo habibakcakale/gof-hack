@@ -25,16 +25,17 @@ namespace Hack.Service.Search
 
             var issue = request.Issue;
             Ensure.NotNull(issue);
+            Ensure.NotNull(issue.Fields);
             var modelInput = new ModelInput()
             {
                 Description = issue.Fields.Description,
                 Title = issue.Fields.Summary
             };
-            if (!string.IsNullOrWhiteSpace(issue.Fields.Platform.Value))
+            if (!string.IsNullOrWhiteSpace(issue.Fields.Platform?.Value))
             {
                 modelInput.Platform = issue.Fields.Platform.Value;
             }
-            if (!string.IsNullOrWhiteSpace(issue.Fields.Assignee.EmailAddress))
+            if (!string.IsNullOrWhiteSpace(issue.Fields.Assignee?.EmailAddress))
             {
                 var user = _userRepo.Get(issue.Fields.Assignee.EmailAddress);
                 modelInput.UserRole = (int)user.Role;
