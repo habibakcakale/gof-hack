@@ -1,7 +1,7 @@
 <template>
   <header>
     <v-toolbar color="indigo" dark fixed app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-spacer></v-spacer>
       <v-toolbar-title>MEGA by GanG Of Four</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
