@@ -1,7 +1,9 @@
-﻿using Hack.Service;
+﻿using Hack.Domain;
+using Hack.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Nensure;
+using System;
 
 namespace Hack.Web.Controllers
 {
@@ -44,6 +46,29 @@ namespace Hack.Web.Controllers
             Ensure.NotNull(request);
             var result = _userService.Register(request);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("roleLevel")]
+        public IObjectResponse<SetRoleLevelResponse> SetRoleLevel(SetRoleLevelRequest request)
+        {
+            Ensure.NotNull(request);
+            var result = _userService.SetRoleLevel(request);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("get")]
+        public IObjectResponse<GetUserResponse> GetUser(GetUserRequest request)
+        {
+            Ensure.NotNull(request);
+            var user = request.Id != null ? _userService.Get(request.Id.Value) : _userService.Get(request.Username);
+            return user is null
+                ? BadRequest(new GetUserResponse { FailureMessage = "User not found." })
+                : Ok(new GetUserResponse
+                {
+                    Username = user.Username,
+                    Level = Enum.GetName(typeof(UserLevel), user.Level),
+                    Role = Enum.GetName(typeof(UserRole), user.Role)
+                });
         }
     }
 }
