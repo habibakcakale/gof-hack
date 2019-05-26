@@ -50,20 +50,9 @@ namespace Hack.Service
             {
                 Username = request.Username,
                 PasswordHashed = hashed,
-                Credentials = new JiraCredentials()
             });
             _repo.Save();
             return new RegisterResponse();
-        }
-
-        public SetJiraCredentialsResponse SetJiraCredentials(SetJiraCredentialsRequest request, int userId)
-        {
-            Ensure.NotNull(request);
-            var user = _repo.Find(userId);
-            user.Credentials = new JiraCredentials { Username = request.Credentials.Username, Token = request.Credentials.Token };
-            _repo.Update(user);
-            _repo.Save();
-            return new SetJiraCredentialsResponse();
         }
 
         private string HashSaltPassword(string password, string saltSource)

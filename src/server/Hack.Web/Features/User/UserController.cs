@@ -45,12 +45,5 @@ namespace Hack.Web.Controllers
             var result = _userService.Register(request);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
-
-        [HttpPost("jiraCredentials")]
-        public SetJiraCredentialsResponse JiraCredentials(SetJiraCredentialsRequest request)
-        {
-            Ensure.NotNull(request);
-            return _userService.SetJiraCredentials(request, GetUserId());
-        }
     }
 }

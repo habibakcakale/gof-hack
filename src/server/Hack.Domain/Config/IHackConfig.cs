@@ -3,5 +3,6 @@
     public interface IHackConfig
     {
         AuthenticationConfig Auth { get; }
+        JiraCredentialsConfig JiraCredentials { get; }
     }
 }

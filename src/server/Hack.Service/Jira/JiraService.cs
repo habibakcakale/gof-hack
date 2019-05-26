@@ -12,18 +12,25 @@ namespace Hack.Service
     public sealed class JiraService : IJiraService
     {
         private static readonly Uri BaseAddress = new Uri("https://gof-hack.atlassian.net");
+        private readonly JiraCredentialsConfig _credentials;
 
-        public async Task<GetProjectsResponse> GetProjects(GetProjectsRequest request, User user)
+        private string AuthHeader => Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_credentials.Username}:{_credentials.Token}"));
+
+        public JiraService(JiraCredentialsConfig credentials)
         {
-            Ensure.NotNull(request, user);
-            Ensure.NotNull(user.Credentials);
+            Ensure.NotNull(credentials);
+            _credentials = credentials;
+        }
+
+        public async Task<GetProjectsResponse> GetProjects(GetProjectsRequest request)
+        {
+            Ensure.NotNull(request);
 
             const string endpoint = "rest/api/3/project/search";
             using (var client = new HttpClient())
             {
                 client.BaseAddress = BaseAddress;
-                var headerValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{user.Credentials.Username}:{user.Credentials.Token}"));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", headerValue);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
                 var response = await client.GetAsync(endpoint);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -36,17 +43,15 @@ namespace Hack.Service
             }
         }
 
-        public async Task<GetTasksResponse> GetTasks(GetTasksRequest request, User user)
+        public async Task<GetTasksResponse> GetTasks(GetTasksRequest request)
         {
-            Ensure.NotNull(request, user);
-            Ensure.NotNull(user.Credentials);
+            Ensure.NotNull(request);
 
             var endpoint = $"/rest/api/2/search?jql=project={request.ProjectId}&maxResults=1000&fields=";
             using (var client = new HttpClient())
             {
                 client.BaseAddress = BaseAddress;
-                var headerValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{user.Credentials.Username}:{user.Credentials.Token}"));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", headerValue);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
                 var response = await client.GetAsync(endpoint);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -56,6 +61,21 @@ namespace Hack.Service
                     };
                 }
                 return JsonConvert.DeserializeObject<GetTasksResponse>(await response.Content.ReadAsStringAsync());
+            }
+        }
+
+        public async Task<bool> ValidateCredentials()
+        {
+            const string endpoint = "/rest/api/3/mypermissions";
+            using (var client = new HttpClient())
+
+            {
+                client.BaseAddress = BaseAddress;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
+                var response = await client.GetAsync(endpoint);
+                if (!response.IsSuccessStatusCode) { return false; }
+                dynamic result = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                return result.permissions?.ADMINISTER?.type == "GLOBAL";
             }
         }
     }

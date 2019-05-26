@@ -23,7 +23,7 @@ namespace Hack.Web
         {
             Ensure.NotNull(request);
             var user = _userService.Get(GetUserId());
-            return await _jiraService.GetProjects(request, user);
+            return await _jiraService.GetProjects(request);
         }
 
         [HttpPost("tasks")]
@@ -31,7 +31,7 @@ namespace Hack.Web
         {
             Ensure.NotNull(request);
             var user = _userService.Get(GetUserId());
-            return await _jiraService.GetTasks(request, user);
+            return await _jiraService.GetTasks(request);
         }
     }
 }

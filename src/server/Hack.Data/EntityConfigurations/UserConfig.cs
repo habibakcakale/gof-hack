@@ -15,7 +15,6 @@ namespace Hack.Data
             builder.Property(e => e.PasswordHashed).IsRequired();
             builder.Property(e => e.Role);
             builder.Property(e => e.Level);
-            builder.OwnsOne(e => e.Credentials);
             builder.HasMany(e => e.Projects).WithOne(e => e.User).HasForeignKey(e => e.UserId);
             builder.HasMany(e => e.CompletedWorkItems).WithOne(e => e.User).HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.ClientSetNull);
         }
