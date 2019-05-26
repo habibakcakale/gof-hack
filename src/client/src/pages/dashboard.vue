@@ -53,6 +53,7 @@ export default {
           ]
         ]
       },
+      currentTask: undefined,
       isLoading: false,
       selectedProject: {},
       entries: [],
@@ -86,7 +87,7 @@ export default {
       this.$router.push(
         `project-summary/${this.selectedProject.id}?title=${
           this.selectedProject.name
-        }&key=${this.selectedProject.key}"`
+        }&key=${this.selectedProject.key}`
       );
     }
   }
@@ -160,13 +161,13 @@ export default {
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                color="blue darken-1"
+                color="warning darken-1"
                 flat
                 @click="isOpenCreateProjectModal = false"
                 >Close</v-btn
               >
-              <v-btn color="blue darken-1" flat @click="handleProjectEstimation"
-                >Create</v-btn
+              <v-btn color="success darken-1" @click="handleProjectEstimation"
+                >Go!</v-btn
               >
             </v-card-actions>
           </v-card>

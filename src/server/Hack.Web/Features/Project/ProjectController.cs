@@ -1,4 +1,5 @@
-﻿using Hack.Domain;
+﻿using System.Collections.Generic;
+using Hack.Domain;
 using Hack.Service;
 using Hack.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,12 @@ namespace Hack.Web
             _projectService = projectService;
             _workItemService = workItemService;
         }
+        [HttpGet]
+        public IEnumerable<Project> Get()
+        {
+            return _projectService.GetAll(GetUserId());
+        }
+
 
         [HttpPost("proceed")]
         public IObjectResponse<ProceedResponse> Proceed(ProceedRequest request)
@@ -28,7 +35,7 @@ namespace Hack.Web
             {
                 case ProjectState.Estimation:
                     project.State = ProjectState.TimeSpent;
-                    _projectService.Update(project);
+                    _projectService.Create(project);
                     break;
 
                 case ProjectState.TimeSpent:
@@ -42,5 +49,6 @@ namespace Hack.Web
             }
             return Ok(new ProceedResponse());
         }
+
     }
 }

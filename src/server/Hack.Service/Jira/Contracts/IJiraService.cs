@@ -11,5 +11,7 @@ namespace Hack.Service
         Task<bool> ValidateCredentials();
 
         Task<bool> UserExists(string email);
+
+        Task UpdateOriginalEstimate(UpdateEstimateRequest request);
     }
 }
