@@ -1,7 +1,9 @@
 ﻿using FluentValidation.AspNetCore;
 using Hack.Data;
 using Hack.Domain;
+using Hack.Domain.Config;
 using Hack.Service;
+using Hack.Service.Search;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -14,8 +16,6 @@ using Nensure;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Text;
-using Hack.Domain.Config;
-using Hack.Service.Search;
 
 namespace Hack.Web
 {
@@ -134,6 +134,7 @@ namespace Hack.Web
             Ensure.NotNull(services);
             services.AddScoped<IContextFactory, HackContextFactory>();
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IProjectRepo, ProjectRepo>();
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -143,6 +144,7 @@ namespace Hack.Web
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IJiraService, JiraService>();
             services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IProjectService, ProjectService>();
         }
     }
 }
