@@ -6,7 +6,9 @@ export default {
   layout: "public",
   data() {
     return {
-      registerForm: {}
+      e1: 0,
+      registerForm: {},
+      items: ["Backend", "Frontend"]
     };
   },
   methods: {
@@ -41,42 +43,83 @@ export default {
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
-          <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
-              <v-toolbar-title
-                >Register - Let's make estimation great again!</v-toolbar-title
+          <v-toolbar dark color="primary">
+            <v-toolbar-title
+              >Register - Let's make estimation great again!</v-toolbar-title
+            >
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-stepper v-model="e1">
+            <v-stepper-header>
+              <v-stepper-step :complete="e1 > 1" step="1"
+                >Register Credentials</v-stepper-step
               >
-              <v-spacer></v-spacer>
-            </v-toolbar>
-            <v-card-text>
-              <v-form>
-                <v-text-field
-                  v-model="registerForm.username"
-                  name="name"
-                  label="Email"
-                  type="text"
-                ></v-text-field>
-                <v-text-field
-                  v-model="registerForm.password"
-                  append-icon="visibility"
-                  name="password"
-                  label="Password"
-                  type="password"
-                ></v-text-field>
-                <v-text-field
-                  v-model="registerForm.passwordConfirm"
-                  append-icon="visibility"
-                  name="password-confirm"
-                  label="Password Confirm"
-                  type="password"
-                ></v-text-field>
-              </v-form>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="success" @click="handleRegister">Login</v-btn>
-            </v-card-actions>
-          </v-card>
+
+              <v-divider></v-divider>
+
+              <v-stepper-step :complete="e1 > 2" step="2"
+                >Project Role</v-stepper-step
+              >
+            </v-stepper-header>
+
+            <v-stepper-items>
+              <v-stepper-content step="1">
+                <v-card class="elevation-12">
+                  <v-card-text>
+                    <v-form>
+                      <v-text-field
+                        v-model="registerForm.username"
+                        name="name"
+                        label="Email"
+                        type="text"
+                      ></v-text-field>
+                      <v-text-field
+                        v-model="registerForm.password"
+                        append-icon="visibility"
+                        name="password"
+                        label="Password"
+                        type="password"
+                      ></v-text-field>
+                      <v-text-field
+                        v-model="registerForm.passwordConfirm"
+                        append-icon="visibility"
+                        name="password-confirm"
+                        label="Password Confirm"
+                        type="password"
+                      ></v-text-field>
+                    </v-form>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" @click="e1 = 2">
+                      Continue
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-stepper-content>
+
+              <v-stepper-content step="2">
+                <v-card class="elevation-12">
+                  <v-card-text>
+                    <v-form>
+                      <v-select
+                        v-model="registerForm.role"
+                        :items="items"
+                        label="Standard"
+                      ></v-select>
+                    </v-form>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="success" @click="handleRegister"
+                      >Submit</v-btn
+                    >
+                    <v-btn flat @click="e1 = 1">Cancel</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-stepper-content>
+            </v-stepper-items>
+          </v-stepper>
 
           {{ registerForm }}
         </v-flex>
