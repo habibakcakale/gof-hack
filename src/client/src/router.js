@@ -72,18 +72,19 @@ router.beforeEach((to, from, next) => {
   const hasToken = store.getters.token;
   if (!to.meta.isPublic) {
     if (hasToken) {
-      if (to.meta.alreadyLogged) {
-        next({
-          path: "/dashboard",
-          query: {
-            redirect: to.fullPath
-          }
-        });
-      }
       return next();
     }
     return next({
       path: "/login",
+      query: {
+        redirect: to.fullPath
+      }
+    });
+  }
+
+  if (to.meta.alreadyLogged) {
+    return next({
+      path: "/dashboard",
       query: {
         redirect: to.fullPath
       }
