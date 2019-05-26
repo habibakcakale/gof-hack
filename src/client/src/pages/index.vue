@@ -18,8 +18,8 @@ export default {
       <div class="cta">
         <h2 class="cta__title">Make Estimation Great Again!</h2>
         <p class="cta__p">
-          Browse and discover millions of vectors, photos, PSDs, icons, and free
-          tutorials. Enjoy creating without limits
+          Evaluate your time more efficiently with the help of issue time
+          estimation.
         </p>
         <span class="cta__link" @click="handleScroll">Explore</span>
       </div>
@@ -33,24 +33,24 @@ export default {
       <h3 class="cards__title">Inspiration, creativity and design</h3>
       <div class="cards_list">
         <div class="card">
-          <h3 class="card__title">Motivation</h3>
+          <h3 class="card__title">Agile Decisions</h3>
           <img class="card__icon" src="@/assets/stopwatch.svg" alt="" />
           <p class="card__p">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+            Stop having a bad guide, stop having a bad night.
           </p>
         </div>
         <div class="card">
-          <h3 class="card__title">Colloboration</h3>
+          <h3 class="card__title">Shared Experiences</h3>
           <img class="card__icon" src="@/assets/networking.svg" alt="" />
           <p class="card__p">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+            Real-time previous estimations made by your team members.
           </p>
         </div>
         <div class="card">
-          <h3 class="card__title">Motivation</h3>
+          <h3 class="card__title">Accurate Deadlines</h3>
           <img class="card__icon" src="@/assets/calendar.svg" alt="" />
           <p class="card__p">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+            It's your holiday after all.
           </p>
         </div>
       </div>

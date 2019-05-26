@@ -2,20 +2,20 @@
   <header>
     <v-navigation-drawer v-model="drawer" fixed app>
       <v-list dense>
-        <v-list-tile>
+        <v-list-tile :to="`dashboard`">
           <v-list-tile-action>
-            <v-icon>fa-home</v-icon>
+            <v-icon>fa-chart-line</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
+            <v-list-tile-title>Dashboard</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile>
+        <v-list-tile :to="`ab`">
           <v-list-tile-action>
-            <v-icon>fa-phone</v-icon>
+            <v-icon>fa-project-diagram</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Contact</v-list-tile-title>
+            <v-list-tile-title>About Product</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
