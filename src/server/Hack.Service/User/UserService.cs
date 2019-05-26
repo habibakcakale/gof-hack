@@ -55,6 +55,18 @@ namespace Hack.Service
             return new RegisterResponse();
         }
 
+        public SetRoleLevelResponse SetRoleLevel(SetRoleLevelRequest request)
+        {
+            Ensure.NotNull(request);
+            var user = _repo.Find(request.UserId);
+            if (user is null) { return new SetRoleLevelResponse { FailureMessage = "User not found." }; };
+            user.Level = request.Level;
+            user.Role = request.Role;
+            _repo.Update(user);
+            _repo.Save();
+            return new SetRoleLevelResponse();
+        }
+
         private string HashSaltPassword(string password, string saltSource)
         {
             var salt = Encoding.UTF8.GetBytes(saltSource);
