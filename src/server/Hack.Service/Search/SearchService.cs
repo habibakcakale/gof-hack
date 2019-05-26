@@ -1,61 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Linq;
 using Hack.Data;
 using Hack.Domain;
-using Hack.Service.Search.Models;
+using Hack.Domain.Config;
 using Microsoft.EntityFrameworkCore;
+using Nensure;
 
 namespace Hack.Service.Search
 {
     public class SearchService : ISearchService
     {
-        private readonly IEntityRepo<WorkItem> _requirementRepo;
-        public SearchService(IEntityRepo<WorkItem> requirementRepo)
+        private readonly IUserRepo _userRepo;
+        private readonly IContextFactory _factory;
+        private readonly ContentDirectory _contentDirectory;
+
+        public SearchService(IUserRepo userRepo, IContextFactory factory, ContentDirectory contentDirectory)
         {
-            _requirementRepo = requirementRepo;
+            _userRepo = userRepo;
+            _factory = factory;
+            _contentDirectory = contentDirectory;
         }
 
-        public SearchResult Search(SearchRequest request)
+        public SearchResult Predict(SearchRequest request)
         {
-            switch (request.Type)
+
+            var issue = request.Issue;
+            Ensure.NotNull(issue);
+            var modelInput = new ModelInput()
             {
-                case SearchType.Project:
-                    break;
-                case SearchType.Section:
-                    break;
-                case SearchType.Phase:
-                    break;
-                case SearchType.Epic:
-                    break;
-                case SearchType.Requirement:
-                    return GetRequirements(request);
+                Description = issue.Fields.Description,
+                Title = issue.Fields.Summary
+            };
+            if (!string.IsNullOrWhiteSpace(issue.Fields.Platform.Value))
+            {
+                modelInput.Platform = issue.Fields.Platform.Value;
             }
-            throw new ArgumentOutOfRangeException();
-        }
+            if (!string.IsNullOrWhiteSpace(issue.Fields.Assignee.EmailAddress))
+            {
+                var user = _userRepo.Get(issue.Fields.Assignee.EmailAddress);
+                modelInput.UserRole = (int)user.Role;
+                modelInput.UserLevel = (int?)user.Level ?? 0;
+            }
 
-        private SearchResult GetRequirements(SearchRequest request)
-        {
-            return null;
-            //     $"select TOP 15 R.* from dbo.Requirement R INNER JOIN FREETEXTTABLE(dbo.Requirement, (Title, Description), '{request.Query}') FT ON FT.[Key] = R.Id ORDER BY FT.[Rank]");
-            // var a =  new SearchResult()
-            // {
-            //     SearchItems = result.Select(item => new SearchItem
-            //     {
-            //         Title = item.Title,
-            //         Id = item.Id,
-            //         Type = SearchType.Requirement
-            //     }).ToList()
-            // };
-            // return a;
-        }
-    }
+            var estimated = new MlContextService(_contentDirectory.Path).CreatePredictionEngine(request.Method)
+                .Predict(modelInput);
 
-    public interface ISearchService
-    {
-        SearchResult Search(SearchRequest request);
+            using (var context = _factory.Create())
+            {
+                var workItems = context.Set<WorkItem>().FromSql("EXEC SearchWorkItem {0}",
+                     string.Concat(modelInput.Title, " ", modelInput.Description));
+
+                return new SearchResult
+                {
+                    Estimate = estimated.Estimate,
+                    SearchItems = workItems.ToList()
+                };
+
+            }
+        }
     }
 }

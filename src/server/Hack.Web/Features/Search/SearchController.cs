@@ -1,6 +1,5 @@
 ﻿using Hack.Service;
 using Hack.Service.Search;
-using Hack.Service.Search.Models;
 using Hack.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Nensure;
@@ -17,11 +16,11 @@ namespace Hack.Web
             _searchService = searchService;
         }
 
-        [HttpGet]
+        [HttpPost]
         public SearchResult Get(SearchRequest request)
         {
             Ensure.NotNull(request);
-            return _searchService.Search(request);
+            return _searchService.Predict(request);
         }
     }
 }
