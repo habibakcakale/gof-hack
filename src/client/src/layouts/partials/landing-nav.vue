@@ -8,7 +8,7 @@
       </div>
       <div class="land_header_nav_block">
         <router-link class="land_header_nav__link" :to="`/about-product`"
-          >About Us</router-link
+          >About Product</router-link
         >
         <router-link class="land_header_nav__link" :to="`/login`"
           >Login</router-link
