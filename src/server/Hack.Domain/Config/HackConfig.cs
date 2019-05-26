@@ -19,10 +19,12 @@ namespace Hack.Domain
         }
 
         public AuthenticationConfig Auth { get; }
+        public JiraCredentialsConfig JiraCredentials { get; set; }
 
-        public HackConfig(AuthenticationConfig auth)
+        public HackConfig(AuthenticationConfig auth, JiraCredentialsConfig jiraCredentials)
         {
             Auth = auth ?? throw new ArgumentNullException(nameof(auth));
+            JiraCredentials = jiraCredentials ?? throw new ArgumentNullException(nameof(jiraCredentials));
         }
     }
 }

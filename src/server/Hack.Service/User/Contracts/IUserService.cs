@@ -11,7 +11,5 @@ namespace Hack.Service
         bool IsLoginValid(LoginRequest request);
 
         RegisterResponse Register(RegisterRequest request);
-
-        SetJiraCredentialsResponse SetJiraCredentials(SetJiraCredentialsRequest request, int userId);
     }
 }

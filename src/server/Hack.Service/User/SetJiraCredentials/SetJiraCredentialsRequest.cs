@@ -4,7 +4,7 @@ namespace Hack.Service
 {
     public sealed class SetJiraCredentialsRequest
     {
-        public JiraCredentials Credentials { get; set; }
+        public JiraCredentialsConfig Credentials { get; set; }
 
         //public SetJiraCredentialsRequest()
         //{
