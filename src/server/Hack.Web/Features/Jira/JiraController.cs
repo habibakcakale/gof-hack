@@ -50,5 +50,13 @@ namespace Hack.Web
             var user = _userService.Get(GetUserId());
             return await _jiraService.GetTasks(request);
         }
+
+        [HttpPost("updateEstimate")]
+        public async Task<SuccessResponse> UpdateEstimate(UpdateEstimateRequest request)
+        {
+            Ensure.NotNull(request);
+            await _jiraService.UpdateOriginalEstimate(request);
+            return new SuccessResponse();
+        }
     }
 }

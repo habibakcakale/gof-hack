@@ -92,8 +92,34 @@ namespace Hack.Service
                 dynamic result = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
                 return result.Count == 1;
             }
+        }
 
-            throw new NotImplementedException();
+        public async Task UpdateOriginalEstimate(UpdateEstimateRequest request)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = BaseAddress;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
+                var requestBody = JsonConvert.SerializeObject(new
+                {
+                    update = new
+                    {
+                        timetracking = new[]
+                        {
+                            new
+                            {
+                                edit = new
+                                {
+                                    originalEstimate = request.Estimate
+                                }
+                            }
+                        }
+                    }
+                });
+                var response = await client.PutAsync($"/rest/api/2/issue/{request.IssueIdOrKey}",
+                       new StringContent(requestBody, Encoding.UTF8, "application/json"));
+                response.EnsureSuccessStatusCode();
+            }
         }
     }
 }
