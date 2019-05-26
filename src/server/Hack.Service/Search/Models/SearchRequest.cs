@@ -1,4 +1,6 @@
-﻿namespace Hack.Service.Search
+﻿using System.Data;
+
+namespace Hack.Service.Search
 {
     public class SearchRequest
     {

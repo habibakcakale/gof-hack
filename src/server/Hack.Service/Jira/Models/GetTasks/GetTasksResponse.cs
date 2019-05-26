@@ -28,7 +28,11 @@ namespace Hack.Service
                 public AssigneeDto Assignee { get; set; }
                 public DateTime Updated { get; set; }
                 [JsonProperty("customfield_10031")]
-                public  PlatformDto Platform { get; set; }
+                public CustomAttributeDto Platform { get; set; }
+                [JsonProperty("customfield_10032")]
+                public CustomAttributeDto UserRole { get; set; }
+                [JsonProperty("customfield_10033")]
+                public CustomAttributeDto UserLevel { get; set; }
                 public string Summary { get; set; }
                 public string Description { get; set; }
                 public UserDto Creator { get; set; }
@@ -36,7 +40,7 @@ namespace Hack.Service
                 public ProgressDto AggregateProgress { get; set; }
 
                 #region SubItems.FieldDto
-                public sealed class PlatformDto
+                public sealed class CustomAttributeDto
                 {
                     public string Value { get; set; }
 

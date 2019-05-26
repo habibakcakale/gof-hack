@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Hack.Data;
 using Hack.Domain;
 using Hack.Domain.Config;
@@ -9,13 +10,11 @@ namespace Hack.Service.Search
 {
     public class SearchService : ISearchService
     {
-        private readonly IUserRepo _userRepo;
         private readonly IContextFactory _factory;
         private readonly ContentDirectory _contentDirectory;
 
-        public SearchService(IUserRepo userRepo, IContextFactory factory, ContentDirectory contentDirectory)
+        public SearchService(IContextFactory factory, ContentDirectory contentDirectory)
         {
-            _userRepo = userRepo;
             _factory = factory;
             _contentDirectory = contentDirectory;
         }
@@ -35,12 +34,9 @@ namespace Hack.Service.Search
             {
                 modelInput.Platform = issue.Fields.Platform.Value;
             }
-            if (!string.IsNullOrWhiteSpace(issue.Fields.Assignee?.EmailAddress))
-            {
-                var user = _userRepo.Get(issue.Fields.Assignee.EmailAddress);
-                modelInput.UserRole = (int)user.Role;
-                modelInput.UserLevel = (int?)user.Level ?? 0;
-            }
+
+            modelInput.UserRole = (int)GetValue<UserRole>(issue.Fields.UserRole?.Value);
+            modelInput.UserLevel = (int)GetValue<UserLevel>(issue.Fields.UserLevel?.Value);
 
             var estimated = new MlContextService(_contentDirectory.Path).CreatePredictionEngine(request.Method)
                 .Predict(modelInput);
@@ -57,6 +53,11 @@ namespace Hack.Service.Search
                 };
 
             }
+        }
+
+        private T GetValue<T>(string value)
+        {
+            return Enum.TryParse(typeof(T), value, out var parsed) ? (T)parsed : default(T);
         }
     }
 }
