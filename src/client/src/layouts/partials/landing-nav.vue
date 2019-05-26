@@ -2,9 +2,7 @@
   <header class="land_header">
     <nav class="land_header_nav">
       <div class="land_header_nav_block">
-        <router-link class="land_header_nav__link" :to="`/`"
-          >Home Page</router-link
-        >
+        <router-link class="land_header_nav__link" :to="`/`">MEGA</router-link>
       </div>
       <div class="land_header_nav_block">
         <router-link class="land_header_nav__link" :to="`/about-product`"
