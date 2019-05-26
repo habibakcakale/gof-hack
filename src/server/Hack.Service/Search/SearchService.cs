@@ -1,61 +1,63 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using Hack.Data;
 using Hack.Domain;
-using Hack.Service.Search.Models;
+using Hack.Domain.Config;
 using Microsoft.EntityFrameworkCore;
+using Nensure;
 
 namespace Hack.Service.Search
 {
     public class SearchService : ISearchService
     {
-        private readonly IEntityRepo<WorkItem> _requirementRepo;
-        public SearchService(IEntityRepo<WorkItem> requirementRepo)
+        private readonly IContextFactory _factory;
+        private readonly ContentDirectory _contentDirectory;
+
+        public SearchService(IContextFactory factory, ContentDirectory contentDirectory)
         {
-            _requirementRepo = requirementRepo;
+            _factory = factory;
+            _contentDirectory = contentDirectory;
         }
 
-        public SearchResult Search(SearchRequest request)
+        public SearchResult Predict(SearchRequest request)
         {
-            switch (request.Type)
+
+            var issue = request.Issue;
+            Ensure.NotNull(issue);
+            Ensure.NotNull(issue.Fields);
+            var modelInput = new ModelInput()
             {
-                case SearchType.Project:
-                    break;
-                case SearchType.Section:
-                    break;
-                case SearchType.Phase:
-                    break;
-                case SearchType.Epic:
-                    break;
-                case SearchType.Requirement:
-                    return GetRequirements(request);
+                Description = issue.Fields.Description,
+                Title = issue.Fields.Summary
+            };
+            if (!string.IsNullOrWhiteSpace(issue.Fields.Platform?.Value))
+            {
+                modelInput.Platform = issue.Fields.Platform.Value;
             }
-            throw new ArgumentOutOfRangeException();
+
+            modelInput.UserRole = (int)GetValue<UserRole>(issue.Fields.UserRole?.Value);
+            modelInput.UserLevel = (int)GetValue<UserLevel>(issue.Fields.UserLevel?.Value);
+
+            var estimated = new MlContextService(_contentDirectory.Path).CreatePredictionEngine(request.Method)
+                .Predict(modelInput);
+
+            using (var context = _factory.Create())
+            {
+                var workItems = context.Set<WorkItem>().FromSql("EXEC SearchWorkItem {0}",
+                     string.Concat(modelInput.Title, " ", modelInput.Description));
+
+                return new SearchResult
+                {
+                    Estimate = estimated.Estimate,
+                    SearchItems = workItems.ToList()
+                };
+
+            }
         }
 
-        private SearchResult GetRequirements(SearchRequest request)
+        private T GetValue<T>(string value)
         {
-            return null;
-            //     $"select TOP 15 R.* from dbo.Requirement R INNER JOIN FREETEXTTABLE(dbo.Requirement, (Title, Description), '{request.Query}') FT ON FT.[Key] = R.Id ORDER BY FT.[Rank]");
-            // var a =  new SearchResult()
-            // {
-            //     SearchItems = result.Select(item => new SearchItem
-            //     {
-            //         Title = item.Title,
-            //         Id = item.Id,
-            //         Type = SearchType.Requirement
-            //     }).ToList()
-            // };
-            // return a;
+            return Enum.TryParse(typeof(T), value, out var parsed) ? (T)parsed : default(T);
         }
-    }
-
-    public interface ISearchService
-    {
-        SearchResult Search(SearchRequest request);
     }
 }

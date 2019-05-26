@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Hack.Domain;
 
-namespace Hack.Service.Search.Models
+namespace Hack.Service.Search
 {
     public class SearchResult
     {
-        public ICollection<SearchItem> SearchItems { get; set; }
-    }
-
-    public class SearchItem
-    {
-        public string Title { get; set; }
-        public int Id { get; set; }
-        public SearchType Type { get; set; }
+        public ICollection<WorkItem> SearchItems { get; set; }
+        public float Estimate { get; set; }
     }
 }
