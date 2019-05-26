@@ -24,7 +24,8 @@ const router = new Router({
           path: "",
           component: () => import("@/pages/index.vue"),
           meta: {
-            isPublic: true
+            isPublic: true,
+            alreadyLogged: true
           }
         },
         {
