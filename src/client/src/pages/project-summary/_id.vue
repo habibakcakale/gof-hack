@@ -2,12 +2,44 @@
 import service from "@/utils/service";
   export default  {
     name: 'ProjectSummary',
+    filters: {
+      timeInHours(d) {
+        d = Number(d);
+      const h = Math.floor(d / 3600);
+      const m = Math.floor(d % 3600 / 60);
+      const s = Math.floor(d % 3600 % 60);
+
+      const hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+      const mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+      const sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+      return hDisplay + mDisplay + sDisplay;
+
+    }
+    },
     props: [],
     data() {
       return {
+      estimationTimeValue: {},
       currentTask: '',
       searchItems:[],
       issues: [],
+      roles: [
+        { label: "Frontend Developer", value: "FD" },
+        { label: "Backend Developer", value: "BD" },
+        { label: "Quality Assurance", value: "QA" },
+        { label: "Bussiness Analyst", value: "BA" },
+        { label: "Solution Architect", value: "SA" },
+        { label: "Project Manager", value: "PM" }
+      ],
+      levels: [
+        { label: "Junior 0", value: "J0" },
+        { label: "Junior 1", value: "J1" },
+        { label: "Junior 2", value: "J2" },
+        { label: "Intermediate 1", value: "I1" },
+        { label: "Intermediate 2", value: "I2" },
+        { label: "Senior 1", value: "S1" },
+        { label: "Senior 2", value: "S2" }
+      ],
       breadcrumbs: [
         {
           text: 'DashBoard',
@@ -26,7 +58,7 @@ import service from "@/utils/service";
           { text: 'Key', value: 'key',  align: 'center',  sortable: false  },
           { text: 'Summary', value: 'fields.summary',  align: 'center',  sortable: false  },
           { text: 'Priority', value: 'fields.priority.name',  align: 'center',  sortable: false  },
-          { text: 'Time Spent', value: 'fields.timeSpent',  align: 'center',  sortable: false  },
+          { text: 'Estimated Time', value: 'timeestimate',  align: 'center',  sortable: false  },
           { text: 'Time Estimation', value: 'timeestimate',  align: 'center',  sortable: false  },
 
         ],
@@ -36,7 +68,6 @@ import service from "@/utils/service";
           { text: 'User Role', value: 'userRole',  align: 'center',  sortable: false  },
           { text: 'User Level', value: 'userRole',  align: 'center',  sortable: false  },
           { text: 'Time Spent', value: 'timeestimate',  align: 'center',  sortable: false  },
-          { text: 'JIRA Link', value: 'timeestimate',  align: 'center',  sortable: false  }
         ],
         estimationMethods: [
         "FastForest",
@@ -65,13 +96,29 @@ import service from "@/utils/service";
          service.post('search', {
           issue:task,
           method: this.selectedEstimationMethod
-        }).then(({searchItems})=>{
+        }).then(({searchItems, estimate})=>{
           this.searchItems = searchItems;
+          this.currentEstimation = estimate;
         });
         this.currentTask = task;
       },
-      updateCurrentTaskWithThisEstimation() {
+      handleTimeUpdate(id) {
+        const issueIdOrKey = id
 
+        const estimate = Number(this.estimationTimeValue[id])
+
+        /* if(!Number.isInteger(estimate)) {
+          return this.estimationTimeValue[id] = 0;
+        } */
+        service.post('jira/updateestimate', {
+         estimate,
+          issueIdOrKey
+        }).then(({isSuccess}) => {
+            if(isSuccess) {
+            this.getCurrentProjectTasks()
+            this.this.estimationTimeValue[id] = ''
+            }
+        })
       }
     }
 }
@@ -128,17 +175,42 @@ import service from "@/utils/service";
               {{ props.item.fields.priority.name }}
             </td>
             <td class="text-xs-center">
-              {{ Number(props.item.fields.timeSpent) }}
+              {{ props.item.fields.timeOriginalEstimate }}
+            </td>
+            <td class="text-xs-center">
+              <v-text-field
+                v-model.number="estimationTimeValue[props.item.id]"
+                label="Please input your time hourly"
+              >
+                <template v-slot:append-outer>
+                  <v-btn
+                    flat
+                    small
+                    class=""
+                    color="success"
+                    @click="handleTimeUpdate(props.item.id)"
+                  >
+                    update
+                  </v-btn>
+                </template>
+              </v-text-field>
             </td>
           </tr>
         </template>
         <template v-slot:expand="props">
+          <v-card flat>
+            <p class="mt-5 px-3" style="font-size: 20px; text-align: center;">
+              According to the training data constructed with
+              <strong>{{ selectedEstimationMethod }} </strong> algorithm, our
+              current estimation is: {{ currentEstimation | timeInHours }}
+            </p>
+          </v-card>
+          <v-divider></v-divider>
           <v-card class="py-4" flat>
-            <!-- <p class="my-2">
-              <pre>{{ currentTask | json }}</pre>
-            </p> -->
             <div style="display: flex; align-items: center;" class="mx-5">
-              <h3 class="my-3">Choose a similar task</h3>
+              <h3 class="my-3">
+                Similar tasks that can helps you determine estimation:
+              </h3>
               <v-spacer></v-spacer>
             </div>
             <v-card class="mx-4">
@@ -159,18 +231,14 @@ import service from "@/utils/service";
                           : "No description added"
                       }}
                     </td>
-                    <td class="text-xs-center">{{ props.item.userRole }}</td>
-                    <td class="text-xs-center">{{ props.item.userLevel }}</td>
                     <td class="text-xs-center">
-                      {{ props.item.estimate }}
+                      {{ roles[props.item.userRole]["label"] }}
                     </td>
                     <td class="text-xs-center">
-                      <a target="_blank" :href="props.item">
-                        <v-icon color="primary" small>
-                          link
-                        </v-icon>
-                      </a>
-                      {{ props.item }}
+                      {{ levels[props.item.userLevel]["label"] }}
+                    </td>
+                    <td class="text-xs-center">
+                      {{ props.item.estimate | timeInHours }}
                     </td>
                   </tr>
                 </template>

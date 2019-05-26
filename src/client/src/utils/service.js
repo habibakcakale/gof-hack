@@ -28,13 +28,15 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   res => res.data,
   error => {
-    Vue.toasted.global.network_error({
-      message: error.message
-    });
-
     if (error.response.status == 401) {
       removeToken();
       router.push("/login");
+    }
+
+    if (error.response.status == 400) {
+      Vue.toasted.global.network_error({
+        message: error.response.data.title
+      });
     }
 
     return Promise.reject(error);

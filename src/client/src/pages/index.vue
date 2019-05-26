@@ -61,7 +61,7 @@ export default {
       <p class="definition__p">
         <strong>MEGA</strong> is an Issue Time Estimation Assistant which helps
         Project Managers to estimate the time needed for tasks by referencing
-        from previous experiences. JAPE has been developed in the hackathon
+        from previous experiences. MEGA has been developed in the hackathon
         challenge, OSF Hackers 2019 by the team Gang of Four.
       </p>
       <img class="definition__bg" src="@/assets/bg.svg" />

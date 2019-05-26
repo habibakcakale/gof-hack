@@ -6,27 +6,28 @@ export default {
   layout: "public",
   data() {
     return {
-      loginForm: {}
+      loginForm: {},
+      isRequired: [v => !!v || "Password is required"],
+      emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ]
     };
   },
   methods: {
     ...mapActions("auth", ["SET_TOKEN"]),
     handleLogin() {
       // todo validation
-
-      service
-        .post("user/login", this.loginForm)
-        .then(({ isSuccess, token }) => {
-          console.log("[login.vue] Request successful");
-          // once back-end completed, we can check here.
-          // todo redirect dashboard after login
-          console.log(isSuccess);
-          console.log();
-          if (isSuccess) {
-            this.SET_TOKEN(token);
-            this.$router.push("/dashboard");
-          }
-        });
+      if (this.$refs.loginForm.validate()) {
+        service
+          .post("user/login", this.loginForm)
+          .then(({ isSuccess, token }) => {
+            if (isSuccess) {
+              this.SET_TOKEN(token);
+              this.$router.push("/dashboard");
+            }
+          });
+      }
     }
   }
 };
@@ -43,10 +44,12 @@ export default {
               <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
-              <v-form>
+              <v-form ref="loginForm">
                 <v-text-field
                   v-model="loginForm.username"
+                  validate-on-blur
                   prepend-icon="account_circle"
+                  :rules="emailRules"
                   name="login"
                   label="Login"
                   type="text"
@@ -54,6 +57,8 @@ export default {
                 <v-text-field
                   id="password"
                   v-model="loginForm.password"
+                  validate-on-blur
+                  :rules="isRequired"
                   prepend-icon="fingerprint"
                   name="password"
                   label="Password"
@@ -64,11 +69,18 @@ export default {
             <v-card-actions>
               <v-spacer></v-spacer>
               <div class="ml-3 mr-3">
-                <a @click="() => this.$router.push('register')">
+                <v-btn
+                  color="primary"
+                  class="text-lowercase"
+                  to="/register"
+                  flat
+                >
                   Create Account
-                </a>
+                </v-btn>
               </div>
-              <v-btn color="primary" @click="handleLogin">Login</v-btn>
+              <v-btn color="success text-lowercase" @click="handleLogin"
+                >Login</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-flex>
