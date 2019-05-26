@@ -2,8 +2,8 @@
 {
     public enum ProjectState
     {
-        Initial,
         Estimation,
-        Completed
+        TimeSpent,
+        Complete
     }
 }

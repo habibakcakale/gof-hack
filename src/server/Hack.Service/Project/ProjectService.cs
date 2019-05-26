@@ -15,9 +15,21 @@ namespace Hack.Service
             _repo = repo;
         }
 
+        public Project Get(int id)
+        {
+            return _repo.Find(id);
+        }
+
         public IEnumerable<Project> GetAll()
         {
             return _repo.Get();
+        }
+
+        public void Update(Project project)
+        {
+            Ensure.NotNull(project);
+            _repo.Update(project);
+            _repo.Save();
         }
     }
 }
