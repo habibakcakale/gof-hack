@@ -13,10 +13,10 @@ import service from "@/utils/service";
           to: '/dashboard'
         },
          {
-          text: 'KEY'
+          text: this.$route.query.title
         },
          {
-          text: 'External HR tasks'
+          text: this.$route.query.key
         },
       ],
        expand: false,
@@ -61,7 +61,7 @@ import service from "@/utils/service";
         </template>
       </v-breadcrumbs>
       <v-toolbar flat color="white">
-        <v-toolbar-title>PRROJECT NAME HERE</v-toolbar-title>
+        <v-toolbar-title>{{ $route.query.title }}</v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
       <v-data-table

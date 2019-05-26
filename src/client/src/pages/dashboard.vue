@@ -83,7 +83,11 @@ export default {
   mounted() {},
   methods: {
     handleProjectEstimation() {
-      this.$router.push(`project-summary/${this.selectedProject.id}`);
+      this.$router.push(
+        `project-summary/${this.selectedProject.id}?title=${
+          this.selectedProject.name
+        }&key=${this.selectedProject.key}"`
+      );
     }
   }
 };

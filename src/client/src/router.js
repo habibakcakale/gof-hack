@@ -56,10 +56,7 @@ const router = new Router({
         {
           name: "dashboard",
           path: "dashboard",
-          component: () => import("@/pages/dashboard.vue"),
-          meta: {
-            isPublic: true
-          }
+          component: () => import("@/pages/dashboard.vue")
         },
         {
           name: "project-summary-id",

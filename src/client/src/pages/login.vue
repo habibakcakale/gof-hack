@@ -20,9 +20,11 @@ export default {
           console.log("[login.vue] Request successful");
           // once back-end completed, we can check here.
           // todo redirect dashboard after login
+          console.log(isSuccess);
+          console.log();
           if (isSuccess) {
             this.SET_TOKEN(token);
-            this.$router.push("dashboard");
+            this.$router.push("/dashboard");
           }
         });
     }
