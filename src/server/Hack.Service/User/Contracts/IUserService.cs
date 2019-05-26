@@ -11,5 +11,7 @@ namespace Hack.Service
         bool IsLoginValid(LoginRequest request);
 
         RegisterResponse Register(RegisterRequest request);
+
+        SetRoleLevelResponse SetRoleLevel(SetRoleLevelRequest request);
     }
 }

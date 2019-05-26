@@ -9,5 +9,7 @@ namespace Hack.Service
         Task<GetTasksResponse> GetTasks(GetTasksRequest request);
 
         Task<bool> ValidateCredentials();
+
+        Task<bool> UserExists(string email);
     }
 }
