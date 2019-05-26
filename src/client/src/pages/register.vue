@@ -8,7 +8,25 @@ export default {
     return {
       e1: 0,
       registerForm: {},
-      items: ["Backend", "Frontend"]
+      textField: "label",
+      valueField: "value",
+      roles: [
+        { label: "Frontend Developer", value: "FD" },
+        { label: "Backend Developer", value: "BD" },
+        { label: "Quality Assurance", value: "QA" },
+        { label: "Bussiness Analyst", value: "BA" },
+        { label: "Solution Architect", value: "SA" },
+        { label: "Project Manager", value: "PM" }
+      ],
+      levels: [
+        { label: "Junior 0", value: "J0" },
+        { label: "Junior 1", value: "J1" },
+        { label: "Junior 2", value: "J2" },
+        { label: "Intermediate 1", value: "I1" },
+        { label: "Intermediate 2", value: "I2" },
+        { label: "Senior 1", value: "S1" },
+        { label: "Senior 2", value: "S2" }
+      ]
     };
   },
   methods: {
@@ -44,22 +62,16 @@ export default {
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
           <v-toolbar dark color="primary">
-            <v-toolbar-title
-              >Register - Let's make estimation great again!</v-toolbar-title
-            >
+            <v-toolbar-title>Register - Let's make estimation great again!</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
           <v-stepper v-model="e1">
             <v-stepper-header>
-              <v-stepper-step :complete="e1 > 1" step="1"
-                >Register Credentials</v-stepper-step
-              >
+              <v-stepper-step :complete="e1 > 1" step="1">Register Credentials</v-stepper-step>
 
               <v-divider></v-divider>
 
-              <v-stepper-step :complete="e1 > 2" step="2"
-                >Project Role</v-stepper-step
-              >
+              <v-stepper-step :complete="e1 > 2" step="2">Project Role</v-stepper-step>
             </v-stepper-header>
 
             <v-stepper-items>
@@ -91,9 +103,7 @@ export default {
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="e1 = 2">
-                      Continue
-                    </v-btn>
+                    <v-btn color="primary" @click="e1 = 2">Continue</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-stepper-content>
@@ -104,24 +114,30 @@ export default {
                     <v-form>
                       <v-select
                         v-model="registerForm.role"
-                        :items="items"
-                        label="Standard"
+                        :items="roles"
+                        :item-value="valueField"
+                        :item-text="textField"
+                        label="Role"
+                      ></v-select>
+                      
+                      <v-select
+                        v-model="registerForm.level"
+                        :items="levels"
+                        :item-value="valueField"
+                        :item-text="textField"
+                        label="Level"
                       ></v-select>
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="success" @click="handleRegister"
-                      >Submit</v-btn
-                    >
+                    <v-btn color="success" @click="handleRegister">Submit</v-btn>
                     <v-btn flat @click="e1 = 1">Cancel</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-stepper-content>
             </v-stepper-items>
           </v-stepper>
-
-          {{ registerForm }}
         </v-flex>
       </v-layout>
     </v-container>
