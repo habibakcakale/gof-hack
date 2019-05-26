@@ -31,7 +31,7 @@ namespace Hack.Web
             var dbProjects = _projectService.GetAll();
             if (jiraProjectsResult.IsSuccess)
             {
-                response.NewProjects = jiraProjectsResult.Values.Where(p => !dbProjects.Any(dp => dp.JiraId != p.Id))
+                response.NewProjects = jiraProjectsResult.Values.Where(p => dbProjects.All(dp => dp.JiraId != p.Id))
                     .Select(p => new ProjectDto
                     {
                         JiraId = p.Id,

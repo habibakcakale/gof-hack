@@ -33,10 +33,9 @@ namespace Hack.Web
         public async Task<GetProjectsResponse> GetNewProjects(GetProjectsRequest request)
         {
             Ensure.NotNull(request);
-            var user = _userService.Get(GetUserId());
             var response = await _jiraService.GetProjects(request);
-            var dbProjects = _projectService.GetAll(GetUserId());
-            var newProjects = response.Values.Where(p => !dbProjects.Any(dp => dp.JiraId != p.Id)).ToArray();
+            var dbProjects = _projectService.GetAll();
+            var newProjects = response.Values.Where(p => dbProjects.All(dp => dp.JiraId != p.Id)).ToArray();
             return new GetProjectsResponse
             {
                 Values = newProjects

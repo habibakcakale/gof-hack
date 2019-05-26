@@ -5,9 +5,9 @@ namespace Hack.Service
 {
     public sealed class GetProjectsResponse : SuccessResponse
     {
-        public IEnumerable<Project> Values { get; set; }
+        public IEnumerable<ProjectData> Values { get; set; }
 
-        public sealed class Project
+        public sealed class ProjectData
         {
             public Uri Self { get; set; }
             public string Id { get; set; }

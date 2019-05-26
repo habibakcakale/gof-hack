@@ -7,7 +7,7 @@ namespace Hack.Service
     {
         Project Get(int id);
 
-        IEnumerable<Project> GetAll(int userId);
+        IEnumerable<Project> GetAll(int? userId= null);
 
         void Update(Project project);
         Project Create(Project project);

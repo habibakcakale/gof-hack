@@ -18,12 +18,6 @@ namespace Hack.Web
             _projectService = projectService;
             _workItemService = workItemService;
         }
-        [HttpGet]
-        public IEnumerable<Project> Get()
-        {
-            return _projectService.GetAll(GetUserId());
-        }
-
 
         [HttpPost("proceed")]
         public IObjectResponse<ProceedResponse> Proceed(ProceedRequest request)

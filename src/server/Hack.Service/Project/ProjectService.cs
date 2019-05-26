@@ -20,9 +20,11 @@ namespace Hack.Service
             return _repo.Find(id);
         }
 
-        public IEnumerable<Project> GetAll(int userId)
+        public IEnumerable<Project> GetAll(int? userId = null)
         {
-            return _repo.Get(p => p.UserId == userId);
+            if (userId.HasValue)
+                return _repo.Get(p => p.UserId == userId);
+            return _repo.Get();
         }
 
         public void Update(Project project)
