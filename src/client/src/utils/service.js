@@ -30,8 +30,16 @@ service.interceptors.response.use(
   error => {
     var response = error.response;
     var message = "";
-    if (response && response.data && response.data.errors)
-      message = Object.keys(response.data.errors).map(item => response.data.errors[item]).join("<br/>");
+    if (response && response.data && response.data) {
+      var data = response.data;
+      if (data && data.errors) {
+        message = Object.keys(response.data.errors).map(item => response.data.errors[item]).join("<br/>");
+      } else if (data.failureMessage) {
+        message = data.failureMessage;
+      } else {
+        message = error.message;
+      }
+    }
     else
       message = error.message;
     Vue.toasted.global.network_error({
