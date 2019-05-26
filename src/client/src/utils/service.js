@@ -1,6 +1,8 @@
 import axios from "axios";
 import Vue from "vue";
 import store from "@/store";
+import router from "@/router";
+import { removeToken } from "@/utils/token";
 
 const service = axios.create({
   baseURL: "http://gof-hack.azurewebsites.net/api",
@@ -24,31 +26,17 @@ service.interceptors.request.use(
 );
 
 service.interceptors.response.use(
-  ({ data }) => {
-    const { code, isSuccess, failureMessage } = data;
-
-    if (isSuccess == false) {
-      Vue.toasted.global.network_error({
-        message: failureMessage
-      });
-    }
-
-    if (code === 401) {
-      alert("Auth Failed");
-    }
-    if (code === 405) {
-      alert("NetWork Error");
-    }
-    if (code === 500) {
-      alert("NetWork Error");
-    }
-
-    return data;
-  },
+  res => res.data,
   error => {
     Vue.toasted.global.network_error({
       message: error.message
     });
+
+    if (error.response.status == 401) {
+      removeToken();
+      router.push("/login");
+    }
+
     return Promise.reject(error);
   }
 );

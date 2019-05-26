@@ -1,7 +1,9 @@
 ﻿using FluentValidation.AspNetCore;
 using Hack.Data;
 using Hack.Domain;
+using Hack.Domain.Config;
 using Hack.Service;
+using Hack.Service.Search;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -19,8 +21,11 @@ namespace Hack.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _environment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
+            _environment = environment;
             Configuration = configuration;
         }
 
@@ -121,6 +126,7 @@ namespace Hack.Web
             services.AddSingleton(auth.Token);
             services.AddSingleton(auth.Credentials);
             services.AddSingleton(jiraCredentials);
+            services.AddSingleton(new ContentDirectory { Path = _environment.ContentRootPath });
         }
 
         private void RegisterContextAndRepositories(IServiceCollection services)
@@ -128,6 +134,7 @@ namespace Hack.Web
             Ensure.NotNull(services);
             services.AddScoped<IContextFactory, HackContextFactory>();
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IProjectRepo, ProjectRepo>();
         }
 
         private void RegisterServices(IServiceCollection services)
@@ -136,6 +143,8 @@ namespace Hack.Web
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IJiraService, JiraService>();
+            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IProjectService, ProjectService>();
         }
     }
 }

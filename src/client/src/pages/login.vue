@@ -20,9 +20,11 @@ export default {
           console.log("[login.vue] Request successful");
           // once back-end completed, we can check here.
           // todo redirect dashboard after login
+          console.log(isSuccess);
+          console.log();
           if (isSuccess) {
             this.SET_TOKEN(token);
-            this.$router.push("dashboard");
+            this.$router.push("/dashboard");
           }
         });
     }
@@ -44,7 +46,7 @@ export default {
               <v-form>
                 <v-text-field
                   v-model="loginForm.username"
-                  prepend-icon="fa-facebook"
+                  prepend-icon="account_circle"
                   name="login"
                   label="Login"
                   type="text"
@@ -52,7 +54,7 @@ export default {
                 <v-text-field
                   id="password"
                   v-model="loginForm.password"
-                  prepend-icon="fa-twitter"
+                  prepend-icon="fingerprint"
                   name="password"
                   label="Password"
                   type="password"
@@ -61,6 +63,11 @@ export default {
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
+              <div class="ml-3 mr-3">
+                <a @click="() => this.$router.push('register')">
+                  Create Account
+                </a>
+              </div>
               <v-btn color="primary" @click="handleLogin">Login</v-btn>
             </v-card-actions>
           </v-card>

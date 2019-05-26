@@ -78,5 +78,22 @@ namespace Hack.Service
                 return result.permissions?.ADMINISTER?.type == "GLOBAL";
             }
         }
+
+        public async Task<bool> UserExists(string email)
+        {
+            Ensure.NotNullOrEmpty(email);
+            var endpoint = $"/rest/api/3/user/search?query={email}";
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = BaseAddress;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", AuthHeader);
+                var response = await client.GetAsync(endpoint);
+                if (!response.IsSuccessStatusCode) { return false; }
+                dynamic result = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                return result.Count == 1;
+            }
+
+            throw new NotImplementedException();
+        }
     }
 }

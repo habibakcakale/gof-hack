@@ -46,13 +46,28 @@ namespace Hack.Service
             {
                 return new RegisterResponse { FailureMessage = $"Username {request.Username} is taken." };
             }
+
             user = _repo.Create(new User
             {
                 Username = request.Username,
                 PasswordHashed = hashed,
+                Level = request.Level,
+                Role = request.Role
             });
             _repo.Save();
             return new RegisterResponse();
+        }
+
+        public SetRoleLevelResponse SetRoleLevel(SetRoleLevelRequest request)
+        {
+            Ensure.NotNull(request);
+            var user = _repo.Find(request.UserId);
+            if (user is null) { return new SetRoleLevelResponse { FailureMessage = "User not found." }; };
+            user.Level = request.Level;
+            user.Role = request.Role;
+            _repo.Update(user);
+            _repo.Save();
+            return new SetRoleLevelResponse();
         }
 
         private string HashSaltPassword(string password, string saltSource)
