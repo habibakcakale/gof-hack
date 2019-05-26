@@ -14,13 +14,18 @@ using Nensure;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Text;
+using Hack.Domain.Config;
+using Hack.Service.Search;
 
 namespace Hack.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _environment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
+            _environment = environment;
             Configuration = configuration;
         }
 
@@ -121,6 +126,7 @@ namespace Hack.Web
             services.AddSingleton(auth.Token);
             services.AddSingleton(auth.Credentials);
             services.AddSingleton(jiraCredentials);
+            services.AddSingleton(new ContentDirectory { Path = _environment.ContentRootPath });
         }
 
         private void RegisterContextAndRepositories(IServiceCollection services)
@@ -136,6 +142,7 @@ namespace Hack.Web
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IJiraService, JiraService>();
+            services.AddScoped<ISearchService, SearchService>();
         }
     }
 }

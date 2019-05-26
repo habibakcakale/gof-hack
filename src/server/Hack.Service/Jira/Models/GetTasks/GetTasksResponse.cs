@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Hack.Service
 {
@@ -26,13 +27,20 @@ namespace Hack.Service
                 public TimeEstimateDto TimeEstimate { get; set; }
                 public AssigneeDto Assignee { get; set; }
                 public DateTime Updated { get; set; }
+                [JsonProperty("customfield_10031")]
+                public  PlatformDto Platform { get; set; }
                 public string Summary { get; set; }
+                public string Description { get; set; }
                 public UserDto Creator { get; set; }
                 public UserDto Reporter { get; set; }
                 public ProgressDto AggregateProgress { get; set; }
 
                 #region SubItems.FieldDto
+                public sealed class PlatformDto
+                {
+                    public string Value { get; set; }
 
+                }
                 public sealed class IssueTypeDto
                 {
                     public string Name { get; set; }
@@ -55,6 +63,8 @@ namespace Hack.Service
 
                 public sealed class AssigneeDto
                 {
+                    public string AccountId { get; set; }
+                    public string EmailAddress { get; set; }
                 }
 
                 public sealed class StatusDto
