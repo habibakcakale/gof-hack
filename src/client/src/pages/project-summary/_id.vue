@@ -105,11 +105,7 @@ import service from "@/utils/service";
       handleTimeUpdate(id) {
         const issueIdOrKey = id
 
-        const estimate = Number(this.estimationTimeValue[id])
-
-        /* if(!Number.isInteger(estimate)) {
-          return this.estimationTimeValue[id] = 0;
-        } */
+        const estimate = Number(this.estimationTimeValue[id]) * 60 ;
         service.post('jira/updateestimate', {
          estimate,
           issueIdOrKey
@@ -118,6 +114,20 @@ import service from "@/utils/service";
             this.getCurrentProjectTasks()
             this.this.estimationTimeValue[id] = ''
             }
+        })
+      },
+      processed(){
+        service.post('project/proceed', {
+          projectId:this.$route.params.id,
+          jiraId:  this.$route.params.id,
+          state:"Initial"
+        }).then(()=> {
+          this.$toasted.show("Project created successfully",{
+            type:"success",
+            duration: 3000,
+            position: "top-center"
+          });
+          this.$router.push("/dashboard");
         })
       }
     }
@@ -150,33 +160,34 @@ import service from "@/utils/service";
           ></v-select>
         </v-flex>
       </v-toolbar>
-      <v-data-table
-        :headers="headers"
-        :items="issues"
-        :expand="expand"
-        hide-actions
-      >
+      <v-data-table :headers="headers" :items="issues" :expand="expand" hide-actions>
         <template v-slot:items="props">
           <tr
             :class="{
               'active-task': currentTask && currentTask.id == props.item.id
             }"
             style="cursor:pointer"
-            @click="
-              (props.expanded = !props.expanded), setCurrentTask(props.item)
-            "
           >
-            <td class="text-xs-center">
-              {{ props.item.fields.issueType.name }}
-            </td>
-            <td class="text-xs-center">{{ props.item.key }}</td>
-            <td class="text-xs-center">{{ props.item.fields.summary }}</td>
-            <td class="text-xs-center">
-              {{ props.item.fields.priority.name }}
-            </td>
-            <td class="text-xs-center">
-              {{ props.item.fields.timeOriginalEstimate | timeInHours }}
-            </td>
+            <td
+              class="text-xs-center"
+              @click="(props.expanded = !props.expanded), setCurrentTask(props.item)"
+            >{{ props.item.fields.issueType.name }}</td>
+            <td
+              class="text-xs-center"
+              @click="(props.expanded = !props.expanded), setCurrentTask(props.item)"
+            >{{ props.item.key }}</td>
+            <td
+              class="text-xs-center"
+              @click="(props.expanded = !props.expanded), setCurrentTask(props.item)"
+            >{{ props.item.fields.summary }}</td>
+            <td
+              class="text-xs-center"
+              @click="(props.expanded = !props.expanded), setCurrentTask(props.item)"
+            >{{ props.item.fields.priority.name }}</td>
+            <td
+              class="text-xs-center"
+              @click="(props.expanded = !props.expanded), setCurrentTask(props.item)"
+            >{{ props.item.fields.timeOriginalEstimate | timeInHours }}</td>
             <td class="text-xs-center">
               <v-text-field
                 v-model.number="estimationTimeValue[props.item.id]"
@@ -186,12 +197,10 @@ import service from "@/utils/service";
                   <v-btn
                     flat
                     small
-                    class=""
+                    class
                     color="success"
                     @click="handleTimeUpdate(props.item.id)"
-                  >
-                    update
-                  </v-btn>
+                  >update</v-btn>
                 </template>
               </v-text-field>
             </td>
@@ -201,45 +210,32 @@ import service from "@/utils/service";
           <v-card flat>
             <p class="mt-5 px-3" style="font-size: 20px; text-align: center;">
               According to the training data constructed with
-              <strong>{{ selectedEstimationMethod }} </strong> algorithm, our
+              <strong>{{ selectedEstimationMethod }}</strong>
+              algorithm, our
               current estimation is: {{ currentEstimation | timeInHours }}
             </p>
           </v-card>
           <v-divider></v-divider>
           <v-card class="py-4" flat>
             <div style="display: flex; align-items: center;" class="mx-5">
-              <h3 class="my-3">
-                Similar tasks that can helps you determine estimation:
-              </h3>
+              <h3 class="my-3">Similar tasks that can helps you determine estimation:</h3>
               <v-spacer></v-spacer>
             </div>
             <v-card class="mx-4">
-              <v-data-table
-                :headers="subTaskHeaders"
-                :items="searchItems"
-                hide-actions
-              >
+              <v-data-table :headers="subTaskHeaders" :items="searchItems" hide-actions>
                 <template v-slot:items="props">
                   <tr style="cursor:pointer">
-                    <td class="text-xs-center">
-                      {{ props.item.title }}
-                    </td>
+                    <td class="text-xs-center">{{ props.item.title }}</td>
                     <td class="text-xs-left py-4">
                       {{
-                        props.item.description
-                          ? props.item.description
-                          : "No description added"
+                      props.item.description
+                      ? props.item.description
+                      : "No description added"
                       }}
                     </td>
-                    <td class="text-xs-center">
-                      {{ roles[props.item.userRole]["label"] }}
-                    </td>
-                    <td class="text-xs-center">
-                      {{ levels[props.item.userLevel]["label"] }}
-                    </td>
-                    <td class="text-xs-center">
-                      {{ props.item.estimate | timeInHours }}
-                    </td>
+                    <td class="text-xs-center">{{ roles[props.item.userRole]["label"] }}</td>
+                    <td class="text-xs-center">{{ levels[props.item.userLevel]["label"] }}</td>
+                    <td class="text-xs-center">{{ props.item.estimate | timeInHours }}</td>
                   </tr>
                 </template>
               </v-data-table>
@@ -254,13 +250,13 @@ import service from "@/utils/service";
 
       <v-toolbar flat color="white">
         <v-spacer></v-spacer>
-        <v-btn>Complete!</v-btn>
+        <v-btn @click="processed">Complete!</v-btn>
         <v-spacer></v-spacer>
       </v-toolbar>
 
       <!--  <v-btn class="mb-5" absolute dark fab bottom right color="blue">
         <v-icon>fa-plus</v-icon>
-      </v-btn> -->
+      </v-btn>-->
     </v-container>
   </section>
 </template>

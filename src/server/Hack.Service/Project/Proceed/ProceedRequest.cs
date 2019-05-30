@@ -6,6 +6,8 @@ namespace Hack.Service
     public sealed class ProceedRequest
     {
         public int ProjectId { get; set; }
+        public string JiraId { get; set; }
+        public ProjectState State { get; set; }
         public IEnumerable<Issue> Issues { get; set; }
 
         public sealed class Issue

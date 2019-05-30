@@ -39,7 +39,7 @@ namespace Hack.Web
                         JiraId = p.Id,
                         Name = p.Name,
                         State = ProjectState.Initial,
-                        Key = p.Key
+                        Key = p.Key,
                     }).ToArray();
             }
 

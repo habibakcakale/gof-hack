@@ -59,7 +59,6 @@ namespace Hack.Web
             app.UseHttpsRedirection();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseAuthentication();
-            app.UseMvc();
             app.UseMvcWithDefaultRoute();
             RunStartupTasks(app.ApplicationServices);
         }

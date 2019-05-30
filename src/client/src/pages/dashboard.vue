@@ -92,23 +92,42 @@ export default {
     }
   },
   mounted() {
-    service.post("dashboard/projectStatus", {}).then(res => {
-      const {
-        estimateProjects,
-        timeSpentProjects,
-        completedProjects,
-        newProjects
-      } = res;
-      this.completedProjects = completedProjects;
-      this.timeSpentProjects = timeSpentProjects;
-      this.estimateProjects = estimateProjects;
-      this.newProjects = newProjects;
-    });
+    this.getProjects();
   },
   methods: {
-    processed(item) {
-      console.log(id);
-      service.post("project/proceed", { projectId: item.projectId });
+    getProjects() {
+      service.post("dashboard/projectStatus", {}).then(res => {
+        const {
+          estimateProjects,
+          timeSpentProjects,
+          completedProjects,
+          newProjects
+        } = res;
+        this.completedProjects = completedProjects;
+        this.timeSpentProjects = timeSpentProjects;
+        this.estimateProjects = estimateProjects;
+        this.newProjects = newProjects;
+      });
+    },
+    processed(item, state) {
+      service
+        .post("project/proceed", {
+          projectId: item.projectId,
+          state: state
+        })
+        .then(() => {
+          this.getProjects();
+          this.$toasted.show(
+            state == "Estimation"
+              ? "You can now start to log your work to JIRA."
+              : "Your actual data saved in our database to improve our Machine learning model.",
+            {
+              type: "success",
+              duration: 3000,
+              position: "top-center"
+            }
+          );
+        });
     },
     handleProjectEstimation() {
       this.$router.push(
@@ -126,14 +145,14 @@ export default {
     <v-container grid-list-md fill-height>
       <v-layout justify-center>
         <v-card>
-          <v-card-title>In Estimation</v-card-title>
-          <v-data-table :headers="headers" :items="this.estimateProjects" hide-actions>
+          <v-card-title>In Progress</v-card-title>
+          <v-data-table :headers="headers" :items="estimateProjects" hide-actions>
             <template v-slot:items="props">
               <tr>
                 <td class="text-xs-center">{{ props.item.key }}</td>
                 <td>{{ props.item.name }}</td>
                 <td class="text-xs-center">
-                  <v-btn fab dark color="teal" small @click="processed(props.item)">
+                  <v-btn fab dark color="teal" small @click="processed(props.item,'Estimation')">
                     <v-icon dark>arrow_forward</v-icon>
                   </v-btn>
                 </td>
@@ -143,14 +162,14 @@ export default {
         </v-card>
         <v-spacer></v-spacer>
         <v-card>
-          <v-card-title>In Progress</v-card-title>
-          <v-data-table :headers="headers" :items="this.timeSpentProjects" hide-actions>
+          <v-card-title></v-card-title>
+          <v-data-table :headers="headers" :items="timeSpentProjects" hide-actions>
             <template v-slot:items="props">
               <tr>
                 <td class="text-xs-center">{{ props.item.key }}</td>
                 <td>{{ props.item.name }}</td>
                 <td class="text-xs-center">
-                  <v-btn fab dark color="teal" small @click="processed(props.item)">
+                  <v-btn fab dark color="teal" small @click="processed(props.item,'TimeSpent')">
                     <v-icon dark>arrow_forward</v-icon>
                   </v-btn>
                 </td>

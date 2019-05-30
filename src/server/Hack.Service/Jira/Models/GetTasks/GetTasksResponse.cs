@@ -21,7 +21,7 @@ namespace Hack.Service
             {
                 public IssueTypeDto IssueType { get; set; }
                 public float? TimeSpent { get; set; }
-                public ResolutionDto Resolution { get; set; }
+                public dynamic Resolution { get; set; }
                 public DateTime Created { get; set; }
                 public PriorityDto Priority { get; set; }
                 public AssigneeDto Assignee { get; set; }
