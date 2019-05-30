@@ -1,0 +1,136 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <SpaRoot>ClientApp\</SpaRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClientApp\**" />
+    <Compile Remove="Config\**" />
+    <Content Remove="ClientApp\**" />
+    <Content Remove="Config\**" />
+    <EmbeddedResource Remove="ClientApp\**" />
+    <EmbeddedResource Remove="Config\**" />
+    <None Remove="ClientApp\**" />
+    <None Remove="Config\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="NLog.Config" Version="4.6.3" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hack.Service\Hack.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ML\Models\FastForest.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ML\Models\FastTree.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ML\Models\FastTreeTweedie.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ML\Models\Gam.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ML\Models\LbfgsPoissonRegression.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ML\Models\OnlineGradientDescent.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ML\Models\Sdca.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\fonts\fa-brands-400.9f4ce3dc.woff2" />
+    <None Include="wwwroot\fonts\fa-regular-400.7980a636.woff2" />
+    <None Include="wwwroot\fonts\fa-solid-900.64b3e814.woff2" />
+    <None Include="wwwroot\fonts\Roboto-Black.59eb3601.woff2" />
+    <None Include="wwwroot\fonts\Roboto-BlackItalic.f75569f8.woff2" />
+    <None Include="wwwroot\fonts\Roboto-Bold.b52fac2b.woff2" />
+    <None Include="wwwroot\fonts\Roboto-BoldItalic.94008e69.woff2" />
+    <None Include="wwwroot\fonts\Roboto-Light.d26871e8.woff2" />
+    <None Include="wwwroot\fonts\Roboto-LightItalic.e8eaae90.woff2" />
+    <None Include="wwwroot\fonts\Roboto-Medium.90d16760.woff2" />
+    <None Include="wwwroot\fonts\Roboto-MediumItalic.13ec0eb5.woff2" />
+    <None Include="wwwroot\fonts\Roboto-Regular.73f0a88b.woff2" />
+    <None Include="wwwroot\fonts\Roboto-RegularItalic.4357beb8.woff2" />
+    <None Include="wwwroot\fonts\Roboto-Thin.ad538a69.woff2" />
+    <None Include="wwwroot\fonts\Roboto-ThinItalic.5b4a33e1.woff2" />
+    <None Include="wwwroot\img\bg.478293ac.svg" />
+    <None Include="wwwroot\img\calendar.3582138f.svg" />
+    <None Include="wwwroot\img\fa-brands-400.38975343.svg" />
+    <None Include="wwwroot\img\fa-regular-400.da8a235b.svg" />
+    <None Include="wwwroot\img\fa-solid-900.7726a281.svg" />
+    <None Include="wwwroot\img\footer-right.af0f116b.svg" />
+    <None Include="wwwroot\img\home-team.9d405064.svg" />
+    <None Include="wwwroot\img\networking.f498b1c7.svg" />
+    <None Include="wwwroot\img\stopwatch.a3e987a1.svg" />
+    <None Include="wwwroot\img\the_man.059b2297.svg" />
+    <None Include="wwwroot\js\app.6706da7e.js" />
+    <None Include="wwwroot\js\app.6706da7e.js.map" />
+    <None Include="wwwroot\js\chunk-029544cf.905f8b5c.js" />
+    <None Include="wwwroot\js\chunk-029544cf.905f8b5c.js.map" />
+    <None Include="wwwroot\js\chunk-02b1a068.e5afe311.js" />
+    <None Include="wwwroot\js\chunk-02b1a068.e5afe311.js.map" />
+    <None Include="wwwroot\js\chunk-0893b378.d90af2e5.js" />
+    <None Include="wwwroot\js\chunk-0893b378.d90af2e5.js.map" />
+    <None Include="wwwroot\js\chunk-09ee0fe9.d3c19b35.js" />
+    <None Include="wwwroot\js\chunk-09ee0fe9.d3c19b35.js.map" />
+    <None Include="wwwroot\js\chunk-1593e8ea.faf66bc2.js" />
+    <None Include="wwwroot\js\chunk-1593e8ea.faf66bc2.js.map" />
+    <None Include="wwwroot\js\chunk-15bcec44.b9e9472e.js" />
+    <None Include="wwwroot\js\chunk-15bcec44.b9e9472e.js.map" />
+    <None Include="wwwroot\js\chunk-221f0876.7e27e3a8.js" />
+    <None Include="wwwroot\js\chunk-221f0876.7e27e3a8.js.map" />
+    <None Include="wwwroot\js\chunk-2825ac84.136a8a0e.js" />
+    <None Include="wwwroot\js\chunk-2825ac84.136a8a0e.js.map" />
+    <None Include="wwwroot\js\chunk-2d208a4d.66c1b41b.js" />
+    <None Include="wwwroot\js\chunk-2d208a4d.66c1b41b.js.map" />
+    <None Include="wwwroot\js\chunk-2d237d32.5948d321.js" />
+    <None Include="wwwroot\js\chunk-2d237d32.5948d321.js.map" />
+    <None Include="wwwroot\js\chunk-56f496dc.111552ad.js" />
+    <None Include="wwwroot\js\chunk-56f496dc.111552ad.js.map" />
+    <None Include="wwwroot\js\chunk-6f878c58.418f17c5.js" />
+    <None Include="wwwroot\js\chunk-6f878c58.418f17c5.js.map" />
+    <None Include="wwwroot\js\chunk-71fb1395.eee9f112.js" />
+    <None Include="wwwroot\js\chunk-71fb1395.eee9f112.js.map" />
+    <None Include="wwwroot\js\chunk-747bbab8.542e27de.js" />
+    <None Include="wwwroot\js\chunk-747bbab8.542e27de.js.map" />
+    <None Include="wwwroot\js\chunk-92da6658.93e4f4fd.js" />
+    <None Include="wwwroot\js\chunk-92da6658.93e4f4fd.js.map" />
+    <None Include="wwwroot\js\chunk-d9f3022a.c02df0eb.js" />
+    <None Include="wwwroot\js\chunk-d9f3022a.c02df0eb.js.map" />
+    <None Include="wwwroot\js\chunk-f35f4a7e.1eba590e.js" />
+    <None Include="wwwroot\js\chunk-f35f4a7e.1eba590e.js.map" />
+    <None Include="wwwroot\js\chunk-vendors.6b642ed4.js" />
+    <None Include="wwwroot\js\chunk-vendors.6b642ed4.js.map" />
+  </ItemGroup>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)dist\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>

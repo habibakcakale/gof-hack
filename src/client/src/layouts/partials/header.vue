@@ -1,49 +1,28 @@
-<template lang="html">
+<template>
   <header>
-    <v-navigation-drawer v-model="drawer" fixed app>
-      <v-list dense>
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-icon>fa-home</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-icon>fa-phone</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Contact</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
     <v-toolbar color="indigo" dark fixed app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>GanG Of Four</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-title>MEGA</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items class="hidden-sm-and-down">
+        <v-btn flat @click="handleLogout">
+          <v-icon class="ml-2 mr-2">exit_to_app</v-icon> Logout
+        </v-btn>
+      </v-toolbar-items>
     </v-toolbar>
   </header>
 </template>
 
 <script lang="js">
+  import { mapActions } from "vuex";
   export default  {
     name: 'Header',
-    props: [],
-    data: () => ({
-      drawer: null
-    }),
-    computed: {
-
-    },
-    mounted() {
-
-    },
     methods: {
-
+      ...mapActions("auth", ["REMOVE_TOKEN"]),
+      handleLogout(){
+        this.REMOVE_TOKEN();
+        this.$router.push('/');
+      }
     }
 }
 </script>
-
-<style scoped lang="scss"></style>
